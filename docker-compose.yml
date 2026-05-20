@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.1
+    image: traefik:v3.3
     container_name: cdo-traefik
     restart: unless-stopped
     command:
@@ -66,6 +66,7 @@ services:
       - internal
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=cdo-web"
       - "traefik.http.routers.portal.rule=Host(`${DOMAIN_PORTAL}`)"
       - "traefik.http.routers.portal.entrypoints=websecure"
       - "traefik.http.routers.portal.tls=true"

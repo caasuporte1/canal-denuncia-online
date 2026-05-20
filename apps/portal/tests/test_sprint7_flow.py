@@ -16,9 +16,17 @@ def test_homepage_portal_exibe_acessos_principais():
     response = client.get("/")
     assert response.status_code == 200
     assert "Canal de Denúncia Online" in response.text
+    assert 'href="/static/favicon.svg"' in response.text
     assert "Fazer denúncia" in response.text
     assert 'href="/acompanhar"' in response.text
     assert 'href="/auth/login"' in response.text
+
+
+def test_favicon_placeholder_disponivel():
+    client = TestClient(app, base_url="https://testserver")
+    response = client.get("/static/favicon.svg")
+    assert response.status_code == 200
+    assert "svg" in response.text
 
 
 def test_login_redirect_empresa_e_admin():

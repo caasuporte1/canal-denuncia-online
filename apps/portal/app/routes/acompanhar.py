@@ -13,7 +13,6 @@ from app.core.session import (
     verify_complainant_csrf,
 )
 from app.models.report import Report
-from app.models.report_message import ReportMessage
 from app.services.audit import audit_event
 from app.services.credential_check import verify_credentials_constant_time
 from app.services.ip_policy import get_client_ip

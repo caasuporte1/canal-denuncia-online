@@ -18,7 +18,7 @@ from app.services.credentials import generate_login, generate_password, hash_acc
 from app.services.email import notify_tenant_admins
 from app.services.ip_policy import anonymous_ip_hash, get_client_ip
 from app.services.protocol import generate_protocol
-from app.services.upload import UploadValidationError, validate_and_store_upload
+from app.services.upload import MAX_TOTAL_UPLOAD_BYTES, UploadValidationError, validate_and_store_upload
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -110,10 +110,14 @@ def create_report(
     try:
         db.add(report)
         db.flush()
+        total_upload_bytes = 0
         for upload in attachments or []:
             if not upload.filename:
                 continue
             stored = validate_and_store_upload(upload, tenant.id, report.id)
+            total_upload_bytes += stored["size_bytes"]
+            if total_upload_bytes > MAX_TOTAL_UPLOAD_BYTES:
+                raise UploadValidationError("Tamanho total dos anexos excede o limite permitido.")
             db.add(Attachment(tenant_id=tenant.id, report_id=report.id, uploaded_by_type="denunciante", **stored))
             audit_event(
                 db,

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from slowapi.errors import RateLimitExceeded
 
-from app.core.logging import configure_logging
+from app.core.logging import RequestLoggingMiddleware, configure_logging
 from app.core.rate_limit import limiter
 from app.routes.acompanhar import router as acompanhar_router
 from app.routes.admin import router as admin_router
@@ -15,6 +15,7 @@ configure_logging()
 
 app = FastAPI()
 app.state.limiter = limiter
+app.add_middleware(RequestLoggingMiddleware)
 
 
 @app.exception_handler(RateLimitExceeded)

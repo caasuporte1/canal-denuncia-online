@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Tenants{% endblock %}
+{% block content %}
+<nav>
+  <a href="/admin">Admin</a>
+  <a href="/admin/tenants">Tenants</a>
+  <a href="/admin/denuncias">Denuncias globais</a>
+  <form class="inline" method="post" action="/auth/logout">
+    <input type="hidden" name="csrf_token" value="{{ current.session.csrf_token }}">
+    <button class="secondary" type="submit">Sair</button>
+  </form>
+</nav>
+<section class="panel">
+  <h1>Tenants</h1>
+  <a class="button" href="/admin/tenants/novo">Novo tenant</a>
+  <table>
+    <thead><tr><th>Nome</th><th>Slug</th><th>Status</th><th>Criado em</th></tr></thead>
+    <tbody>
+      {% for tenant in tenants %}
+        <tr>
+          <td><a href="/admin/tenants/{{ tenant.id }}">{{ tenant.name }}</a></td>
+          <td>{{ tenant.slug }}</td>
+          <td>{{ tenant.status }}</td>
+          <td>{{ tenant.created_at }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4">Nenhum tenant cadastrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

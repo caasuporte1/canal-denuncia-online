@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Admin Triton{% endblock %}
+{% block content %}
+<nav>
+  <a href="/admin">Admin</a>
+  <a href="/admin/tenants">Tenants</a>
+  <a href="/admin/denuncias">Denuncias globais</a>
+  <form class="inline" method="post" action="/auth/logout">
+    <input type="hidden" name="csrf_token" value="{{ current.session.csrf_token }}">
+    <button class="secondary" type="submit">Sair</button>
+  </form>
+</nav>
+<section class="panel">
+  <h1>Admin Triton</h1>
+  <p>Total de tenants: <strong>{{ total_tenants }}</strong></p>
+  <p>Total de denuncias: <strong>{{ total_reports }}</strong></p>
+  <h2>Denuncias por status</h2>
+  <table>
+    <tbody>
+      {% for status, total in status_rows %}
+        <tr><td>{{ statuses.get(status, status) }}</td><td>{{ total }}</td></tr>
+      {% else %}
+        <tr><td colspan="2">Nenhuma denuncia cadastrada.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>Ultimos tenants</h2>
+  <ul>
+    {% for tenant in latest_tenants %}
+      <li><a href="/admin/tenants/{{ tenant.id }}">{{ tenant.name }}</a> <span class="muted">{{ tenant.status }}</span></li>
+    {% else %}
+      <li>Nenhum tenant cadastrado.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

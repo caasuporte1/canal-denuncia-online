@@ -9,6 +9,7 @@ from app.core.database import get_db
 from app.core.rate_limit import limiter
 from app.core.security import verify_password
 from app.core.session import create_session, destroy_session, verify_csrf
+from app.models.tenant import Tenant
 from app.models.user import User
 from app.services.audit import audit_event
 from app.services.ip_policy import get_client_ip
@@ -34,7 +35,11 @@ def login(
     client_ip = get_client_ip(request)
     user_agent = request.headers.get("user-agent")
     user = db.scalar(select(User).where(User.email == email.strip().lower(), User.status == "active"))
-    valid = bool(user and user.role in {"tenant_admin", "tenant_user"} and verify_password(password, user.password_hash))
+    tenant_active = True
+    if user and user.role in {"tenant_admin", "tenant_user"}:
+        tenant = db.get(Tenant, user.tenant_id) if user.tenant_id else None
+        tenant_active = bool(tenant and tenant.status == "active")
+    valid = bool(user and user.role in {"admin_triton", "tenant_admin", "tenant_user"} and tenant_active and verify_password(password, user.password_hash))
     if not valid:
         audit_event(
             db,
@@ -52,7 +57,8 @@ def login(
             status_code=401,
         )
 
-    redirect = RedirectResponse("/empresa", status_code=303)
+    redirect_to = "/admin" if user.role == "admin_triton" else "/empresa"
+    redirect = RedirectResponse(redirect_to, status_code=303)
     create_session(redirect, user_id=user.id, tenant_id=user.tenant_id, role=user.role)
     audit_event(db, "login_success", tenant_id=user.tenant_id, user_id=user.id, ip_address=client_ip, user_agent=user_agent)
     db.commit()

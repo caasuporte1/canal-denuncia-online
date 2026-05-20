@@ -33,6 +33,18 @@ def seed() -> None:
                     status="active",
                 )
             )
+        root = db.scalar(select(User).where(User.email == "root@triton.local"))
+        if not root:
+            db.add(
+                User(
+                    tenant_id=None,
+                    name="Root Triton",
+                    email="root@triton.local",
+                    password_hash=hash_password("Root123!"),
+                    role="admin_triton",
+                    status="active",
+                )
+            )
         db.commit()
         print("Seed de desenvolvimento aplicado.")
     finally:

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Denuncias globais{% endblock %}
+{% block content %}
+<nav>
+  <a href="/admin">Admin</a>
+  <a href="/admin/tenants">Tenants</a>
+  <a href="/admin/denuncias">Denuncias globais</a>
+</nav>
+<section class="panel">
+  <h1>Denuncias globais</h1>
+  <form method="get" action="/admin/denuncias">
+    <label>Tenant</label>
+    <select name="tenant">
+      <option value="">Todos</option>
+      {% for tenant in tenants %}
+        <option value="{{ tenant.id }}" {% if filters.tenant == tenant.id|string %}selected{% endif %}>{{ tenant.name }}</option>
+      {% endfor %}
+    </select>
+    <label>Status</label>
+    <select name="status">
+      <option value="">Todos</option>
+      {% for value, label in statuses.items() %}
+        <option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <label>Categoria</label>
+    <select name="category">
+      <option value="">Todas</option>
+      {% for value, label in categories.items() %}
+        <option value="{{ value }}" {% if filters.category == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <label>Protocolo</label>
+    <input name="protocol" value="{{ filters.protocol }}">
+    <button type="submit">Filtrar</button>
+  </form>
+  <table>
+    <thead><tr><th>Tenant</th><th>Protocolo</th><th>Status</th><th>Categoria</th><th>Data</th></tr></thead>
+    <tbody>
+      {% for report, tenant in rows %}
+        <tr>
+          <td>{{ tenant.name }}</td>
+          <td>{{ report.protocol }}</td>
+          <td>{{ statuses.get(report.status, report.status) }}</td>
+          <td>{{ categories.get(report.category, report.category) }}</td>
+          <td>{{ report.created_at }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">Nenhuma denuncia encontrada.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

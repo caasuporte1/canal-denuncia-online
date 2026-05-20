@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Tenant {{ tenant.name }}{% endblock %}
+{% block content %}
+<nav>
+  <a href="/admin">Admin</a>
+  <a href="/admin/tenants">Tenants</a>
+  <a href="/admin/denuncias">Denuncias globais</a>
+</nav>
+<section class="panel">
+  <h1>{{ tenant.name }}</h1>
+  <p><strong>Documento:</strong> {{ tenant.document }}</p>
+  <p><strong>Slug:</strong> {{ tenant.slug }}</p>
+  <p><strong>Status:</strong> {{ tenant.status }}</p>
+  <p><strong>Criado em:</strong> {{ tenant.created_at }}</p>
+  <p><strong>Total denuncias:</strong> {{ total_reports }}</p>
+  <form method="post" action="/admin/tenants/{{ tenant.id }}/status">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Status</label>
+    <select name="status">
+      <option value="active" {% if tenant.status == "active" %}selected{% endif %}>active</option>
+      <option value="inactive" {% if tenant.status == "inactive" %}selected{% endif %}>inactive</option>
+    </select>
+    <button type="submit">Salvar status</button>
+  </form>
+  <h2>Usuarios vinculados</h2>
+  <table>
+    <thead><tr><th>Nome</th><th>E-mail</th><th>Role</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for user in tenant.users %}
+        <tr><td>{{ user.name }}</td><td>{{ user.email }}</td><td>{{ user.role }}</td><td>{{ user.status }}</td></tr>
+      {% else %}
+        <tr><td colspan="4">Nenhum usuario.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

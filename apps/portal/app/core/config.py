@@ -19,6 +19,8 @@ class Settings:
         self.redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
         self.session_cookie_name = os.getenv("SESSION_COOKIE_NAME", "cdo_session")
         self.session_ttl_seconds = int(os.getenv("SESSION_TTL_SECONDS", str(8 * 60 * 60)))
+        self.complainant_session_cookie_name = os.getenv("COMPLAINANT_SESSION_COOKIE_NAME", "cdo_complainant_session")
+        self.complainant_session_ttl_seconds = int(os.getenv("COMPLAINANT_SESSION_TTL_SECONDS", str(30 * 60)))
         self.session_secret = os.getenv("SESSION_SECRET", "")
         if self.environment == "production" and not self.session_secret:
             raise RuntimeError("SESSION_SECRET precisa estar configurado em production.")

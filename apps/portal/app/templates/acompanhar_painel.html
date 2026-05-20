@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Acompanhamento da denuncia{% endblock %}
+{% block content %}
+<nav>
+  <a href="/acompanhar/painel">Acompanhamento</a>
+  <form class="inline" method="post" action="/acompanhar/logout">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="secondary" type="submit">Sair</button>
+  </form>
+</nav>
+<section class="panel">
+  <h1>Acompanhamento da denuncia</h1>
+  <p><strong>Protocolo:</strong> {{ report.protocol }}</p>
+  <p><strong>Status:</strong> {{ statuses.get(report.status, report.status) }}</p>
+  <p><strong>Categoria:</strong> {{ categories.get(report.category, report.category) }}</p>
+  <p><strong>Data de criacao:</strong> {{ report.created_at }}</p>
+  {% if report.is_anonymous %}
+    <p><strong>Tipo:</strong> Denuncia anonima</p>
+  {% endif %}
+
+  <h2>Descricao original</h2>
+  <p>{{ report.description }}</p>
+
+  <h2>Respostas</h2>
+  <div class="timeline">
+    {% for message in messages %}
+      <div class="timeline-item">
+        <strong>{% if message.sender_type == "empresa" %}Empresa{% else %}Sistema{% endif %}</strong>
+        <div class="muted">{{ message.created_at }}</div>
+        <p>{{ message.message }}</p>
+      </div>
+    {% else %}
+      <p>Nenhuma resposta registrada ate o momento.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

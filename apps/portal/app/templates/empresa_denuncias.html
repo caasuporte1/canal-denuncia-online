@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Denuncias{% endblock %}
+{% block content %}
+<nav>
+  <a href="/empresa">Painel</a>
+  <a href="/empresa/denuncias">Denuncias</a>
+  <form class="inline" method="post" action="/auth/logout">
+    <input type="hidden" name="csrf_token" value="{{ current.session.csrf_token }}">
+    <button class="secondary" type="submit">Sair</button>
+  </form>
+</nav>
+<section class="panel">
+  <h1>Denuncias</h1>
+  <form method="get" action="/empresa/denuncias">
+    <label>Status</label>
+    <select name="status">
+      <option value="">Todos</option>
+      {% for value, label in statuses.items() %}
+        <option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <label>Categoria</label>
+    <select name="category">
+      <option value="">Todas</option>
+      {% for value, label in categories.items() %}
+        <option value="{{ value }}" {% if filters.category == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <label>Protocolo</label>
+    <input name="protocol" value="{{ filters.protocol }}">
+    <button type="submit">Filtrar</button>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th>Protocolo</th>
+        <th>Status</th>
+        <th>Categoria</th>
+        <th>Tipo</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in reports %}
+        <tr>
+          <td><a href="/empresa/denuncias/{{ report.id }}">{{ report.protocol }}</a></td>
+          <td>{{ statuses.get(report.status, report.status) }}</td>
+          <td>{{ categories.get(report.category, report.category) }}</td>
+          <td>{% if report.is_anonymous %}Anonima{% else %}Identificada{% endif %}</td>
+          <td>{{ report.created_at }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">Nenhuma denuncia encontrada.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

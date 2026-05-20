@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Denuncia {{ report.protocol }}{% endblock %}
+{% block content %}
+<nav>
+  <a href="/empresa">Painel</a>
+  <a href="/empresa/denuncias">Denuncias</a>
+  <form class="inline" method="post" action="/auth/logout">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="secondary" type="submit">Sair</button>
+  </form>
+</nav>
+<section class="panel">
+  <h1>{{ report.protocol }}</h1>
+  <p><strong>Status:</strong> {{ statuses.get(report.status, report.status) }}</p>
+  <p><strong>Categoria:</strong> {{ categories.get(report.category, report.category) }}</p>
+  <p><strong>Data:</strong> {{ report.created_at }}</p>
+  {% if report.is_anonymous %}
+    <p><strong>Denunciante:</strong> Denuncia anonima</p>
+  {% else %}
+    <p><strong>Nome:</strong> {{ report.reporter_name }}</p>
+    <p><strong>E-mail:</strong> {{ report.reporter_email }}</p>
+    <p><strong>Telefone:</strong> {{ report.reporter_phone or "-" }}</p>
+  {% endif %}
+  <h2>Descricao</h2>
+  <p>{{ report.description }}</p>
+
+  <h2>Anexos</h2>
+  <ul>
+    {% for attachment in report.attachments %}
+      {% if not attachment.deleted_at %}
+        <li><a href="/empresa/anexos/{{ attachment.id }}">{{ attachment.original_filename }}</a> <span class="muted">({{ attachment.size_bytes }} bytes)</span></li>
+      {% endif %}
+    {% else %}
+      <li>Nenhum anexo.</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Alterar status</h2>
+  <form method="post" action="/empresa/denuncias/{{ report.id }}/status">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <select name="status">
+      {% for value, label in statuses.items() %}
+        <option value="{{ value }}" {% if report.status == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Salvar status</button>
+  </form>
+
+  <h2>Responder</h2>
+  <form method="post" action="/empresa/denuncias/{{ report.id }}/responder">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Mensagem</label>
+    <textarea name="message" maxlength="5000" required></textarea>
+    <button type="submit">Registrar resposta</button>
+  </form>
+
+  <h2>Timeline</h2>
+  <div class="timeline">
+    {% for message in report.messages %}
+      <div class="timeline-item">
+        <strong>{{ message.sender_type }}</strong>
+        <div class="muted">{{ message.created_at }}</div>
+        <p>{{ message.message }}</p>
+      </div>
+    {% else %}
+      <p>Nenhuma resposta registrada.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

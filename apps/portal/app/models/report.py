@@ -48,3 +48,4 @@ class Report(Base):
 
     tenant = relationship("Tenant", back_populates="reports")
     attachments = relationship("Attachment", back_populates="report", cascade="all, delete-orphan")
+    messages = relationship("ReportMessage", back_populates="report", cascade="all, delete-orphan")

@@ -8,6 +8,7 @@ from app.models.user import User
 
 
 def seed() -> None:
+    # DEV ONLY: cria dados locais para validação manual. Não usar em produção.
     db = SessionLocal()
     try:
         tenant = db.scalar(select(Tenant).where(Tenant.slug == "triton"))
@@ -20,14 +21,14 @@ def seed() -> None:
             )
             db.add(tenant)
             db.flush()
-        admin = db.scalar(select(User).where(User.tenant_id == tenant.id, User.email == "admin-triton@example.invalid"))
+        admin = db.scalar(select(User).where(User.tenant_id == tenant.id, User.email == "admin@triton.local"))
         if not admin:
             db.add(
                 User(
                     tenant_id=tenant.id,
                     name="Admin Triton",
-                    email="admin-triton@example.invalid",
-                    password_hash=hash_password("dev-only-change-me"),
+                    email="admin@triton.local",
+                    password_hash=hash_password("Admin123!"),
                     role="tenant_admin",
                     status="active",
                 )

@@ -33,7 +33,10 @@ def validate_and_store_upload(upload: UploadFile, tenant_id, report_id) -> dict:
     if not data:
         raise UploadValidationError("Arquivo vazio.")
 
-    sanitized = sanitize_file(data, extension)
+    try:
+        sanitized = sanitize_file(data, extension)
+    except Exception as exc:
+        raise UploadValidationError("Arquivo invalido ou corrompido.") from exc
     stored_filename = f"{uuid.uuid4()}.{extension}"
     directory = UPLOAD_ROOT / str(tenant_id) / str(report_id)
     directory.mkdir(parents=True, exist_ok=True)

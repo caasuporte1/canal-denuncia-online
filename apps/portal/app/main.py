@@ -4,6 +4,8 @@ from slowapi.errors import RateLimitExceeded
 
 from app.core.logging import configure_logging
 from app.core.rate_limit import limiter
+from app.routes.auth import router as auth_router
+from app.routes.empresa import router as empresa_router
 from app.routes.health import router as health_router
 from app.routes.public import router as public_router
 
@@ -24,4 +26,6 @@ def root() -> dict[str, str]:
 
 
 app.include_router(health_router)
+app.include_router(auth_router)
+app.include_router(empresa_router)
 app.include_router(public_router)

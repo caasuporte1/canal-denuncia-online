@@ -26,9 +26,9 @@ CATEGORY_LABELS = dict(CATEGORIES)
 STATUS_LABELS = {
     "recebida": "Recebida",
     "em_triagem": "Em triagem",
-    "em_apuracao": "Em apuracao",
+    "em_apuracao": "Em apuração",
     "aguardando_resposta": "Aguardando resposta",
-    "concluida": "Concluida",
+    "concluida": "Concluída",
     "arquivada": "Arquivada",
 }
 
@@ -44,7 +44,7 @@ def _tenant(db: Session, current: CurrentUser) -> Tenant:
 
 def _csrf_or_400(request: Request, csrf_token: str) -> None:
     if not verify_csrf(request, csrf_token):
-        raise HTTPException(status_code=400, detail="CSRF invalido.")
+        raise HTTPException(status_code=400, detail="CSRF inválido.")
 
 
 def _report_or_404(db: Session, current: CurrentUser, report_id: UUID, request: Request) -> Report:
@@ -64,7 +64,7 @@ def _report_or_404(db: Session, current: CurrentUser, report_id: UUID, request: 
             metadata={"resource": "report", "resource_id": str(report_id)},
         )
         db.commit()
-        raise HTTPException(status_code=404, detail="Nao encontrado.")
+        raise HTTPException(status_code=404, detail="Não encontrado.")
     return report
 
 
@@ -154,7 +154,7 @@ def change_status(
     _csrf_or_400(request, csrf_token)
     report = _report_or_404(db, current, report_id, request)
     if status not in ALLOWED_STATUSES or not _valid_transition(report.status, status):
-        return Response("Transicao de status invalida.", status_code=400)
+        return Response("Transição de status inválida.", status_code=400)
     old_status = report.status
     report.status = status
     audit_event(
@@ -184,7 +184,7 @@ def respond_report(
     report = _report_or_404(db, current, report_id, request)
     message = message.strip()
     if not message:
-        return Response("Mensagem obrigatoria.", status_code=400)
+        return Response("Mensagem obrigatória.", status_code=400)
     if len(message) > 5000:
         return Response("Mensagem muito longa.", status_code=400)
     db.add(ReportMessage(tenant_id=report.tenant_id, report_id=report.id, sender_type="empresa", sender_user_id=current.user.id, message=message))
@@ -224,10 +224,10 @@ def download_attachment(
             metadata={"resource": "attachment", "resource_id": str(attachment_id)},
         )
         db.commit()
-        raise HTTPException(status_code=404, detail="Nao encontrado.")
+        raise HTTPException(status_code=404, detail="Não encontrado.")
     path = Path(attachment.storage_path)
     if not path.is_file():
-        raise HTTPException(status_code=404, detail="Nao encontrado.")
+        raise HTTPException(status_code=404, detail="Não encontrado.")
     audit_event(
         db,
         "attachment_downloaded",

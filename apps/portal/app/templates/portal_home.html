@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Canal de Denúncia Online{% endblock %}
+{% block content %}
+<section class="home-hero">
+  <span class="status-badge">Portal seguro</span>
+  <h1>Canal de Denúncia Online</h1>
+  <p class="muted">Registre, acompanhe e gerencie denúncias com sigilo, controle de acesso e rastreabilidade operacional.</p>
+</section>
+
+<section class="home-actions" aria-label="Acessos principais">
+  <article class="home-card">
+    <div>
+      <h2>Fazer denúncia</h2>
+      <p>Use o canal público da empresa para registrar uma denúncia anônima ou identificada.</p>
+    </div>
+    <a class="button" href="/triton">Iniciar denúncia</a>
+  </article>
+  <article class="home-card">
+    <div>
+      <h2>Acompanhar denúncia</h2>
+      <p>Acesse o andamento com protocolo, login e senha recebidos no registro.</p>
+    </div>
+    <a class="button secondary" href="/acompanhar">Acompanhar</a>
+  </article>
+  <article class="home-card">
+    <div>
+      <h2>Área da empresa</h2>
+      <p>Entrada restrita para equipes autorizadas analisarem e responderem denúncias.</p>
+    </div>
+    <a class="button secondary" href="/auth/login">Entrar</a>
+  </article>
+</section>
+{% endblock %}

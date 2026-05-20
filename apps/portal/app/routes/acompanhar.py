@@ -24,18 +24,18 @@ templates = Jinja2Templates(directory="app/templates")
 STATUS_LABELS = {
     "recebida": "Recebida",
     "em_triagem": "Em triagem",
-    "em_apuracao": "Em apuracao",
+    "em_apuracao": "Em apuração",
     "aguardando_resposta": "Aguardando resposta",
-    "concluida": "Concluida",
+    "concluida": "Concluída",
     "arquivada": "Arquivada",
 }
 
 CATEGORY_LABELS = {
-    "assedio_moral": "Assedio moral",
-    "assedio_sexual": "Assedio sexual",
-    "discriminacao": "Discriminacao",
-    "seguranca_do_trabalho": "Seguranca do trabalho",
-    "conduta_etica": "Conduta etica",
+    "assedio_moral": "Assédio moral",
+    "assedio_sexual": "Assédio sexual",
+    "discriminacao": "Discriminação",
+    "seguranca_do_trabalho": "Segurança do trabalho",
+    "conduta_etica": "Conduta ética",
     "outros": "Outros",
 }
 
@@ -67,7 +67,7 @@ def login(
         db.commit()
         return templates.TemplateResponse(
             "acompanhar_login.html",
-            {"request": request, "error": "Credenciais invalidas"},
+            {"request": request, "error": "Credenciais inválidas"},
             status_code=401,
         )
 
@@ -75,7 +75,7 @@ def login(
     if not report:
         return templates.TemplateResponse(
             "acompanhar_login.html",
-            {"request": request, "error": "Credenciais invalidas"},
+            {"request": request, "error": "Credenciais inválidas"},
             status_code=401,
         )
     response = RedirectResponse("/acompanhar/painel", status_code=303)
@@ -137,7 +137,7 @@ def logout(request: Request, csrf_token: str = Form(...), db: Session = Depends(
     if not session:
         return RedirectResponse("/acompanhar", status_code=303)
     if not verify_complainant_csrf(request, csrf_token):
-        return Response("CSRF invalido.", status_code=400)
+        return Response("CSRF inválido.", status_code=400)
     response = RedirectResponse("/acompanhar", status_code=303)
     destroy_complainant_session(request, response)
     audit_event(

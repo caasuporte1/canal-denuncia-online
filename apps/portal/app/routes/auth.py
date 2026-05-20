@@ -53,7 +53,7 @@ def login(
         db.commit()
         return templates.TemplateResponse(
             "login.html",
-            {"request": request, "error": "Usuario ou senha invalidos"},
+            {"request": request, "error": "Usuário ou senha inválidos"},
             status_code=401,
         )
 
@@ -73,7 +73,7 @@ def logout(
     db: Session = Depends(get_db),
 ):
     if not verify_csrf(request, csrf_token):
-        return Response("CSRF invalido.", status_code=400)
+        return Response("CSRF inválido.", status_code=400)
     response = RedirectResponse("/auth/login", status_code=303)
     destroy_session(request, response)
     audit_event(

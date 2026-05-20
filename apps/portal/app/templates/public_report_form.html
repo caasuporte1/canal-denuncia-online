@@ -1,49 +1,51 @@
 {% extends "base.html" %}
-{% block title %}Nova denuncia - {{ tenant.name }}{% endblock %}
+{% block title %}Nova denúncia - {{ tenant.name }}{% endblock %}
 {% block content %}
 <section class="panel">
-  <h1>Canal de denuncia - {{ tenant.name }}</h1>
+  <h1>Canal de denúncia - {{ tenant.name }}</h1>
+  <p class="muted">Descreva a situação com clareza. Anexos são opcionais e ajudam na análise.</p>
   {% if errors %}
     <div class="error">
       {% for error in errors %}<p>{{ error }}</p>{% endfor %}
     </div>
   {% endif %}
   <form method="post" action="/{{ tenant.slug }}/denuncias" enctype="multipart/form-data">
-    <label>Tipo</label>
+    <label for="report_type">Tipo</label>
     <select name="report_type" id="report_type">
-      <option value="anonima">Anonima</option>
+      <option value="anonima">Anônima</option>
       <option value="identificada">Identificada</option>
     </select>
 
-    <label>Categoria</label>
-    <select name="category" required>
+    <label for="category">Categoria</label>
+    <select name="category" id="category" required>
       <option value="">Selecione</option>
       {% for value, label in categories %}
         <option value="{{ value }}">{{ label }}</option>
       {% endfor %}
     </select>
 
-    <label>Descricao</label>
-    <textarea name="description" required></textarea>
+    <label for="description">Descrição</label>
+    <textarea name="description" id="description" required placeholder="Informe o que aconteceu, quando, onde e quem pode estar envolvido."></textarea>
 
     <div id="identified_fields">
-      <label>Nome</label>
-      <input name="reporter_name" autocomplete="name">
-      <label>E-mail</label>
-      <input name="reporter_email" type="email" autocomplete="email">
-      <label>Telefone</label>
-      <input name="reporter_phone" autocomplete="tel">
+      <label for="reporter_name">Nome</label>
+      <input name="reporter_name" id="reporter_name" autocomplete="name">
+      <label for="reporter_email">E-mail</label>
+      <input name="reporter_email" id="reporter_email" type="email" autocomplete="email">
+      <label for="reporter_phone">Telefone</label>
+      <input name="reporter_phone" id="reporter_phone" autocomplete="tel">
     </div>
 
-    <label>Anexos opcionais</label>
-    <input name="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx">
+    <label for="attachments">Anexos opcionais</label>
+    <input name="attachments" id="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx">
+    <p class="form-hint">Arquivos permitidos: PDF, JPG, PNG, DOCX e XLSX. Limite de 10 MB por arquivo.</p>
 
     <div class="hidden-field" aria-hidden="true">
-      <label>Website</label>
-      <input name="website" tabindex="-1" autocomplete="off">
+      <label for="website">Website</label>
+      <input name="website" id="website" tabindex="-1" autocomplete="off">
     </div>
 
-    <button type="submit">Enviar denuncia</button>
+    <button type="submit">Enviar denúncia</button>
   </form>
 </section>
 <script>

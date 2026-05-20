@@ -32,10 +32,10 @@ class UploadValidationError(ValueError):
 def validate_and_store_upload(upload: UploadFile, tenant_id, report_id) -> dict:
     original_filename = upload.filename or "arquivo"
     if _has_double_extension(original_filename):
-        raise UploadValidationError("Nome de arquivo invalido.")
+        raise UploadValidationError("Nome de arquivo inválido.")
     extension = _extension(original_filename)
     if extension not in ALLOWED_EXTENSIONS:
-        raise UploadValidationError("Tipo de arquivo nao permitido.")
+        raise UploadValidationError("Tipo de arquivo não permitido.")
 
     data = upload.file.read()
     if len(data) > MAX_UPLOAD_BYTES:
@@ -44,12 +44,12 @@ def validate_and_store_upload(upload: UploadFile, tenant_id, report_id) -> dict:
         raise UploadValidationError("Arquivo vazio.")
     sniffed_mime = sniff_mime(data)
     if sniffed_mime not in ALLOWED_MIME_BY_EXTENSION[extension]:
-        raise UploadValidationError("Conteudo do arquivo nao corresponde ao tipo permitido.")
+        raise UploadValidationError("Conteúdo do arquivo não corresponde ao tipo permitido.")
 
     try:
         sanitized = sanitize_file(data, extension)
     except Exception as exc:
-        raise UploadValidationError("Arquivo invalido ou corrompido.") from exc
+        raise UploadValidationError("Arquivo inválido ou corrompido.") from exc
     stored_filename = f"{uuid.uuid4()}.{extension}"
     directory = UPLOAD_ROOT / str(tenant_id) / str(report_id)
     directory.mkdir(parents=True, exist_ok=True)
@@ -75,7 +75,7 @@ def sanitize_file(data: bytes, extension: str) -> bytes:
         return _sanitize_docx(data)
     if extension == "xlsx":
         return _sanitize_xlsx(data)
-    raise UploadValidationError("Tipo de arquivo nao permitido.")
+    raise UploadValidationError("Tipo de arquivo não permitido.")
 
 
 def _sanitize_image(data: bytes, extension: str) -> bytes:

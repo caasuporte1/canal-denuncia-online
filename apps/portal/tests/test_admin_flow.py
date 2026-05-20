@@ -135,7 +135,7 @@ def test_criacao_tenant(client, admin_data):
         headers={"x-forwarded-for": "10.100.0.5"},
     )
     assert response.status_code == 200
-    assert "Senha temporaria" in response.text
+    assert "Senha temporária" in response.text
     db = SessionLocal()
     try:
         tenant = db.scalar(select(Tenant).where(Tenant.slug == slug))
@@ -161,7 +161,7 @@ def test_slug_invalido_e_duplicado_recusados(client, admin_data):
         headers={"x-forwarded-for": "10.100.0.6"},
     )
     assert invalid.status_code == 400
-    assert "Slug invalido" in invalid.text
+    assert "Slug inválido" in invalid.text
     duplicate = client.post(
         "/admin/tenants",
         data={
@@ -175,7 +175,7 @@ def test_slug_invalido_e_duplicado_recusados(client, admin_data):
         headers={"x-forwarded-for": "10.100.0.6"},
     )
     assert duplicate.status_code == 400
-    assert "Slug ja cadastrado" in duplicate.text
+    assert "Slug já cadastrado" in duplicate.text
 
 
 def test_tenant_inactive_bloqueia_publico_e_login_mas_preserva_acompanhamento(client, admin_data):

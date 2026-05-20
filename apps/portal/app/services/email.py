@@ -26,7 +26,7 @@ def notify_tenant_admins(db: Session, tenant: Tenant, report: Report, ip_address
             tenant_id=tenant.id,
             report_id=report.id,
             recipient_email=admin.email,
-            subject="Nova denuncia recebida",
+            subject="Nova denúncia recebida",
             status="pending",
         )
         db.add(notification)
@@ -46,7 +46,7 @@ def notify_tenant_admins(db: Session, tenant: Tenant, report: Report, ip_address
 def _send_notification(notification: EmailNotification, tenant: Tenant, report: Report) -> None:
     if not all([settings.smtp_host, settings.smtp_user, settings.smtp_password, settings.smtp_from_email]):
         notification.status = "failed"
-        notification.error_message = "SMTP nao configurado"
+        notification.error_message = "SMTP não configurado"
         return
 
     message = EmailMessage()
@@ -56,7 +56,7 @@ def _send_notification(notification: EmailNotification, tenant: Tenant, report: 
     message.set_content(
         "\n".join(
             [
-                f"Uma nova denuncia foi recebida para {tenant.name}.",
+                f"Uma nova denúncia foi recebida para {tenant.name}.",
                 f"Protocolo: {report.protocol}",
                 f"Portal: https://{settings.domain_portal}/{tenant.slug}",
                 f"Data/hora UTC: {datetime.now(timezone.utc).isoformat()}",

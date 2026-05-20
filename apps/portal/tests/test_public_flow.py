@@ -52,13 +52,13 @@ def headers(ip: str) -> dict[str, str]:
 def test_get_triton_exibe_formulario(client):
     response = client.get("/triton", headers=headers("10.10.0.1"))
     assert response.status_code == 200
-    assert "Enviar denuncia" in response.text
+    assert "Enviar denúncia" in response.text
 
 
 def test_get_tenant_inexistente_retorna_pagina_amigavel(client):
     response = client.get("/empresa-inexistente", headers=headers("10.10.0.2"))
     assert response.status_code == 404
-    assert "Canal nao encontrado" in response.text
+    assert "Canal não encontrado" in response.text
 
 
 def test_post_cria_denuncia_anonima_e_credenciais(client):
@@ -92,7 +92,7 @@ def test_upload_invalido_e_recusado(client):
         headers=headers("10.10.0.4"),
     )
     assert response.status_code == 400
-    assert "Tipo de arquivo nao permitido" in response.text
+    assert "Tipo de arquivo não permitido" in response.text
 
 
 def test_tenant_inexistente_nao_cria_denuncia(client):

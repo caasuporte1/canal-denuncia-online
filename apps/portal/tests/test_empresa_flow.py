@@ -134,7 +134,7 @@ def test_login_invalido(client, empresa_data):
         headers={"x-forwarded-for": "10.80.0.3"},
     )
     assert response.status_code == 401
-    assert "Usuario ou senha invalidos" in response.text
+    assert "Usuário ou senha inválidos" in response.text
 
 
 def test_logout(client, empresa_data):

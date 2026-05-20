@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Denuncia recebida{% endblock %}
+{% block title %}Denúncia recebida{% endblock %}
 {% block content %}
 <section class="panel">
   {% if fake_success %}
-    <h1>Denuncia recebida</h1>
-    <p>Sua denuncia foi registrada para analise.</p>
+    <h1>Denúncia recebida</h1>
+    <p>Sua denúncia foi registrada para análise.</p>
   {% else %}
-    <h1>Denuncia recebida</h1>
-    <p class="warning">Guarde estas informacoes. Por seguranca e para preservar o anonimato, nao sera possivel recuperar este acesso caso voce perca os dados.</p>
+    <h1>Denúncia recebida</h1>
+    <p class="warning">Guarde estas informações. Por segurança e para preservar o anonimato, não será possível recuperar este acesso caso você perca os dados.</p>
     <div class="credentials" id="credentials">
       <div class="credential"><strong>Protocolo:</strong> <span>{{ protocol }}</span></div>
       <div class="credential"><strong>Login:</strong> <span>{{ login }}</span></div>

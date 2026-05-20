@@ -2,13 +2,15 @@
 {% block title %}Login empresa{% endblock %}
 {% block content %}
 <section class="panel">
-  <h1>Login empresa</h1>
+  <span class="status-badge">Acesso restrito</span>
+  <h1>Área da empresa e Admin Triton</h1>
+  <p class="muted">Entre com seu e-mail corporativo e senha cadastrada.</p>
   {% if error %}<div class="error">{{ error }}</div>{% endif %}
   <form method="post" action="/auth/login">
-    <label>E-mail</label>
-    <input name="email" type="email" autocomplete="email" required>
-    <label>Senha</label>
-    <input name="password" type="password" autocomplete="current-password" required>
+    <label for="email">E-mail</label>
+    <input name="email" id="email" type="email" autocomplete="email" required>
+    <label for="password">Senha</label>
+    <input name="password" id="password" type="password" autocomplete="current-password" required>
     <button type="submit">Entrar</button>
   </form>
 </section>

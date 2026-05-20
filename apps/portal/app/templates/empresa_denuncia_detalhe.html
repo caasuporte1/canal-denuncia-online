@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Denuncia {{ report.protocol }}{% endblock %}
+{% block title %}Denúncia {{ report.protocol }}{% endblock %}
 {% block content %}
 <nav>
   <a href="/empresa">Painel</a>
-  <a href="/empresa/denuncias">Denuncias</a>
+  <a href="/empresa/denuncias">Denúncias</a>
   <form class="inline" method="post" action="/auth/logout">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button class="secondary" type="submit">Sair</button>
@@ -11,17 +11,17 @@
 </nav>
 <section class="panel">
   <h1>{{ report.protocol }}</h1>
-  <p><strong>Status:</strong> {{ statuses.get(report.status, report.status) }}</p>
+  <p><strong>Status:</strong> <span class="status-badge">{{ statuses.get(report.status, report.status) }}</span></p>
   <p><strong>Categoria:</strong> {{ categories.get(report.category, report.category) }}</p>
   <p><strong>Data:</strong> {{ report.created_at }}</p>
   {% if report.is_anonymous %}
-    <p><strong>Denunciante:</strong> Denuncia anonima</p>
+    <p><strong>Denunciante:</strong> Denúncia anônima</p>
   {% else %}
     <p><strong>Nome:</strong> {{ report.reporter_name }}</p>
     <p><strong>E-mail:</strong> {{ report.reporter_email }}</p>
     <p><strong>Telefone:</strong> {{ report.reporter_phone or "-" }}</p>
   {% endif %}
-  <h2>Descricao</h2>
+  <h2>Descrição</h2>
   <p>{{ report.description }}</p>
 
   <h2>Anexos</h2>
@@ -49,8 +49,8 @@
   <h2>Responder</h2>
   <form method="post" action="/empresa/denuncias/{{ report.id }}/responder">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <label>Mensagem</label>
-    <textarea name="message" maxlength="5000" required></textarea>
+    <label for="message">Mensagem</label>
+    <textarea name="message" id="message" maxlength="5000" required placeholder="Registre uma resposta clara e objetiva para o denunciante."></textarea>
     <button type="submit">Registrar resposta</button>
   </form>
 

@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Denuncias{% endblock %}
+{% block title %}Denúncias{% endblock %}
 {% block content %}
 <nav>
   <a href="/empresa">Painel</a>
-  <a href="/empresa/denuncias">Denuncias</a>
+  <a href="/empresa/denuncias">Denúncias</a>
   <form class="inline" method="post" action="/auth/logout">
     <input type="hidden" name="csrf_token" value="{{ current.session.csrf_token }}">
     <button class="secondary" type="submit">Sair</button>
   </form>
 </nav>
 <section class="panel">
-  <h1>Denuncias</h1>
+  <h1>Denúncias</h1>
   <form method="get" action="/empresa/denuncias">
     <label>Status</label>
     <select name="status">
@@ -27,7 +27,7 @@
       {% endfor %}
     </select>
     <label>Protocolo</label>
-    <input name="protocol" value="{{ filters.protocol }}">
+    <input name="protocol" value="{{ filters.protocol }}" placeholder="CDO-XXXXXXXXXX">
     <button type="submit">Filtrar</button>
   </form>
   <table>
@@ -46,11 +46,11 @@
           <td><a href="/empresa/denuncias/{{ report.id }}">{{ report.protocol }}</a></td>
           <td>{{ statuses.get(report.status, report.status) }}</td>
           <td>{{ categories.get(report.category, report.category) }}</td>
-          <td>{% if report.is_anonymous %}Anonima{% else %}Identificada{% endif %}</td>
+          <td>{% if report.is_anonymous %}Anônima{% else %}Identificada{% endif %}</td>
           <td>{{ report.created_at }}</td>
         </tr>
       {% else %}
-        <tr><td colspan="5">Nenhuma denuncia encontrada.</td></tr>
+        <tr><td colspan="5">Nenhuma denúncia encontrada.</td></tr>
       {% endfor %}
     </tbody>
   </table>

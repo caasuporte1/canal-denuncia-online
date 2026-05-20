@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from slowapi.errors import RateLimitExceeded
+from starlette.templating import Jinja2Templates
 
 from app.core.logging import RequestLoggingMiddleware, configure_logging
 from app.core.rate_limit import limiter
@@ -16,6 +17,7 @@ configure_logging()
 app = FastAPI()
 app.state.limiter = limiter
 app.add_middleware(RequestLoggingMiddleware)
+templates = Jinja2Templates(directory="app/templates")
 
 
 @app.exception_handler(RateLimitExceeded)
@@ -23,9 +25,9 @@ async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
     return JSONResponse({"detail": "Muitas tentativas. Tente novamente mais tarde."}, status_code=429)
 
 
-@app.get("/")
-def root() -> dict[str, str]:
-    return {"service": "Canal de Denuncia Online", "status": "ok"}
+@app.get("/", response_class=HTMLResponse)
+def root(request: Request):
+    return templates.TemplateResponse("portal_home.html", {"request": request})
 
 
 app.include_router(health_router)

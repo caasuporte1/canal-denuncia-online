@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Denuncias globais{% endblock %}
+{% block title %}Denúncias globais{% endblock %}
 {% block content %}
 <nav>
   <a href="/admin">Admin</a>
   <a href="/admin/tenants">Tenants</a>
-  <a href="/admin/denuncias">Denuncias globais</a>
+  <a href="/admin/denuncias">Denúncias globais</a>
 </nav>
 <section class="panel">
-  <h1>Denuncias globais</h1>
+  <h1>Denúncias globais</h1>
   <form method="get" action="/admin/denuncias">
     <label>Tenant</label>
     <select name="tenant">
@@ -31,7 +31,7 @@
       {% endfor %}
     </select>
     <label>Protocolo</label>
-    <input name="protocol" value="{{ filters.protocol }}">
+    <input name="protocol" value="{{ filters.protocol }}" placeholder="CDO-XXXXXXXXXX">
     <button type="submit">Filtrar</button>
   </form>
   <table>
@@ -46,7 +46,7 @@
           <td>{{ report.created_at }}</td>
         </tr>
       {% else %}
-        <tr><td colspan="5">Nenhuma denuncia encontrada.</td></tr>
+        <tr><td colspan="5">Nenhuma denúncia encontrada.</td></tr>
       {% endfor %}
     </tbody>
   </table>

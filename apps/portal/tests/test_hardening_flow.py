@@ -36,7 +36,7 @@ def test_upload_mime_spoof_recusado():
         headers={"x-forwarded-for": f"10.200.0.{uuid.uuid4().int % 200 + 1}"},
     )
     assert response.status_code == 400
-    assert "Conteudo do arquivo" in response.text
+    assert "Conteúdo do arquivo" in response.text
 
 
 def test_upload_extensao_invalida_recusada():
@@ -48,7 +48,7 @@ def test_upload_extensao_invalida_recusada():
         headers={"x-forwarded-for": f"10.201.0.{uuid.uuid4().int % 200 + 1}"},
     )
     assert response.status_code == 400
-    assert "Tipo de arquivo nao permitido" in response.text
+    assert "Tipo de arquivo não permitido" in response.text
 
 
 def test_upload_filename_traversal_sanitizado():

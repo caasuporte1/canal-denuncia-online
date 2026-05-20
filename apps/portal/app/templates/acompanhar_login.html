@@ -1,17 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Acompanhar denuncia{% endblock %}
+{% block title %}Acompanhar denúncia{% endblock %}
 {% block content %}
 <section class="panel">
-  <h1>Acompanhar denuncia</h1>
-  <p class="warning">Por seguranca, apos 30 minutos de inatividade o acesso sera encerrado.</p>
+  <span class="status-badge">Acesso do denunciante</span>
+  <h1>Acompanhar denúncia</h1>
+  <p class="warning">Por segurança, após 30 minutos de inatividade o acesso será encerrado.</p>
   {% if error %}<div class="error">{{ error }}</div>{% endif %}
   <form method="post" action="/acompanhar/login">
-    <label>Protocolo</label>
-    <input name="protocol" autocomplete="off" required>
-    <label>Login</label>
-    <input name="login" autocomplete="off" required>
-    <label>Senha</label>
-    <input name="password" type="password" autocomplete="current-password" required>
+    <label for="protocol">Protocolo</label>
+    <input name="protocol" id="protocol" autocomplete="off" required>
+    <label for="login">Login</label>
+    <input name="login" id="login" autocomplete="off" required>
+    <label for="password">Senha</label>
+    <input name="password" id="password" type="password" autocomplete="current-password" required>
     <button type="submit">Acessar acompanhamento</button>
   </form>
 </section>

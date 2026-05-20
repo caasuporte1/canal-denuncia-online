@@ -3,7 +3,7 @@
 {% block content %}
 <nav>
   <a href="/empresa">Painel</a>
-  <a href="/empresa/denuncias">Denuncias</a>
+  <a href="/empresa/denuncias">Denúncias</a>
   <form class="inline" method="post" action="/auth/logout">
     <input type="hidden" name="csrf_token" value="{{ current.session.csrf_token }}">
     <button class="secondary" type="submit">Sair</button>
@@ -11,8 +11,8 @@
 </nav>
 <section class="panel">
   <h1>{{ tenant.name }}</h1>
-  <p>Total de denuncias: <strong>{{ total }}</strong></p>
-  <p>Denuncias em andamento: <strong>{{ open_total }}</strong></p>
-  <a class="button" href="/empresa/denuncias">Ver denuncias</a>
+  <p>Total de denúncias: <strong>{{ total }}</strong></p>
+  <p>Denúncias em andamento: <strong>{{ open_total }}</strong></p>
+  <a class="button" href="/empresa/denuncias">Ver denúncias</a>
 </section>
 {% endblock %}

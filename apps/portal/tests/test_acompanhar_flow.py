@@ -98,10 +98,10 @@ def test_login_invalido_mensagem_generica(client, reports_data):
         headers={"x-forwarded-for": "10.90.0.3"},
     )
     assert response.status_code == 401
-    assert "Credenciais invalidas" in response.text
-    assert "Protocolo invalido" not in response.text
-    assert "Login invalido" not in response.text
-    assert "Senha invalida" not in response.text
+    assert "Credenciais inválidas" in response.text
+    assert "Protocolo inválido" not in response.text
+    assert "Login inválido" not in response.text
+    assert "Senha inválida" not in response.text
 
 
 def test_dummy_hash_executado(monkeypatch):

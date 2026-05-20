@@ -31,7 +31,7 @@ CATEGORY_LABELS = dict(CATEGORIES)
 
 def _csrf_or_400(request: Request, csrf_token: str) -> None:
     if not verify_csrf(request, csrf_token):
-        raise HTTPException(status_code=400, detail="CSRF invalido.")
+        raise HTTPException(status_code=400, detail="CSRF inválido.")
 
 
 @router.get("")
@@ -97,9 +97,9 @@ def create_tenant(
     _csrf_or_400(request, csrf_token)
     errors = _validate_tenant_form(name, document, slug, admin_name, admin_email)
     if db.scalar(select(Tenant.id).where(Tenant.slug == slug.strip())):
-        errors.append("Slug ja cadastrado.")
+        errors.append("Slug já cadastrado.")
     if db.scalar(select(Tenant.id).where(Tenant.document == document.strip())):
-        errors.append("Documento ja cadastrado.")
+        errors.append("Documento já cadastrado.")
     if errors:
         return templates.TemplateResponse(
             "admin_tenant_novo.html",
@@ -146,7 +146,7 @@ def tenant_detail(
 ):
     tenant = db.scalar(select(Tenant).options(selectinload(Tenant.users)).where(Tenant.id == tenant_id))
     if not tenant:
-        raise HTTPException(status_code=404, detail="Nao encontrado.")
+        raise HTTPException(status_code=404, detail="Não encontrado.")
     total_reports = db.scalar(select(func.count(Report.id)).where(Report.tenant_id == tenant.id)) or 0
     return templates.TemplateResponse(
         "admin_tenant_detalhe.html",
@@ -166,10 +166,10 @@ def change_tenant_status(
 ):
     _csrf_or_400(request, csrf_token)
     if status not in {"active", "inactive"}:
-        return Response("Status invalido.", status_code=400)
+        return Response("Status inválido.", status_code=400)
     tenant = db.get(Tenant, tenant_id)
     if not tenant:
-        raise HTTPException(status_code=404, detail="Nao encontrado.")
+        raise HTTPException(status_code=404, detail="Não encontrado.")
     old_status = tenant.status
     tenant.status = status
     audit_event(
@@ -227,13 +227,13 @@ def _validate_tenant_form(name: str, document: str, slug: str, admin_name: str, 
     errors: list[str] = []
     slug = slug.strip()
     if not name.strip():
-        errors.append("Nome obrigatorio.")
+        errors.append("Nome obrigatório.")
     if not document.strip():
-        errors.append("Documento obrigatorio.")
+        errors.append("Documento obrigatório.")
     if not SLUG_RE.fullmatch(slug):
-        errors.append("Slug invalido. Use apenas letras minusculas, numeros e hifens.")
+        errors.append("Slug inválido. Use apenas letras minúsculas, números e hifens.")
     if not admin_name.strip():
-        errors.append("Nome do admin obrigatorio.")
+        errors.append("Nome do admin obrigatório.")
     if "@" not in admin_email.strip():
-        errors.append("E-mail do admin invalido.")
+        errors.append("E-mail do admin inválido.")
     return errors

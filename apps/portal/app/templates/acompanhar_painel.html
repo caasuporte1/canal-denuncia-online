@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Acompanhamento da denuncia{% endblock %}
+{% block title %}Acompanhamento da denúncia{% endblock %}
 {% block content %}
 <nav>
   <a href="/acompanhar/painel">Acompanhamento</a>
@@ -9,16 +9,16 @@
   </form>
 </nav>
 <section class="panel">
-  <h1>Acompanhamento da denuncia</h1>
+  <h1>Acompanhamento da denúncia</h1>
   <p><strong>Protocolo:</strong> {{ report.protocol }}</p>
-  <p><strong>Status:</strong> {{ statuses.get(report.status, report.status) }}</p>
+  <p><strong>Status:</strong> <span class="status-badge">{{ statuses.get(report.status, report.status) }}</span></p>
   <p><strong>Categoria:</strong> {{ categories.get(report.category, report.category) }}</p>
-  <p><strong>Data de criacao:</strong> {{ report.created_at }}</p>
+  <p><strong>Data de criação:</strong> {{ report.created_at }}</p>
   {% if report.is_anonymous %}
-    <p><strong>Tipo:</strong> Denuncia anonima</p>
+    <p><strong>Tipo:</strong> Denúncia anônima</p>
   {% endif %}
 
-  <h2>Descricao original</h2>
+  <h2>Descrição original</h2>
   <p>{{ report.description }}</p>
 
   <h2>Respostas</h2>
@@ -30,7 +30,7 @@
         <p>{{ message.message }}</p>
       </div>
     {% else %}
-      <p>Nenhuma resposta registrada ate o momento.</p>
+      <p>Nenhuma resposta registrada até o momento.</p>
     {% endfor %}
   </div>
 </section>

@@ -21,7 +21,7 @@ def health() -> dict:
     }
     status = "ok" if all(value == "ok" for value in checks.values()) else "degraded"
     return {
-        "service": "Canal de Denuncia Online",
+        "service": "Canal de Denúncia Online",
         "status": status,
         "uptime_seconds": int(time.monotonic() - START_TIME),
         "checks": checks,

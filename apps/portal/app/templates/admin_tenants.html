@@ -4,7 +4,7 @@
 <nav>
   <a href="/admin">Admin</a>
   <a href="/admin/tenants">Tenants</a>
-  <a href="/admin/denuncias">Denuncias globais</a>
+  <a href="/admin/denuncias">Denúncias globais</a>
   <form class="inline" method="post" action="/auth/logout">
     <input type="hidden" name="csrf_token" value="{{ current.session.csrf_token }}">
     <button class="secondary" type="submit">Sair</button>
@@ -20,7 +20,7 @@
         <tr>
           <td><a href="/admin/tenants/{{ tenant.id }}">{{ tenant.name }}</a></td>
           <td>{{ tenant.slug }}</td>
-          <td>{{ tenant.status }}</td>
+          <td><span class="status-badge">{{ tenant.status }}</span></td>
           <td>{{ tenant.created_at }}</td>
         </tr>
       {% else %}

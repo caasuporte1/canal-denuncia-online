@@ -24,11 +24,11 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 CATEGORIES = [
-    ("assedio_moral", "Assedio moral"),
-    ("assedio_sexual", "Assedio sexual"),
-    ("discriminacao", "Discriminacao"),
-    ("seguranca_do_trabalho", "Seguranca do trabalho"),
-    ("conduta_etica", "Conduta etica"),
+    ("assedio_moral", "Assédio moral"),
+    ("assedio_sexual", "Assédio sexual"),
+    ("discriminacao", "Discriminação"),
+    ("seguranca_do_trabalho", "Segurança do trabalho"),
+    ("conduta_etica", "Conduta ética"),
     ("outros", "Outros"),
 ]
 
@@ -176,27 +176,27 @@ def credentials_pdf(
 def _validate_form(report_type: str, category: str, description: str, reporter_name: str, reporter_email: str) -> list[str]:
     errors: list[str] = []
     if report_type not in {"anonima", "identificada"}:
-        errors.append("Tipo de denuncia invalido.")
+        errors.append("Tipo de denúncia inválido.")
     if category not in {key for key, _ in CATEGORIES}:
-        errors.append("Categoria obrigatoria.")
+        errors.append("Categoria obrigatória.")
     if not description.strip():
-        errors.append("Descricao obrigatoria.")
+        errors.append("Descrição obrigatória.")
     if report_type == "identificada":
         if not reporter_name.strip():
-            errors.append("Nome obrigatorio para denuncia identificada.")
+            errors.append("Nome obrigatório para denúncia identificada.")
         if not reporter_email.strip():
-            errors.append("E-mail obrigatorio para denuncia identificada.")
+            errors.append("E-mail obrigatório para denúncia identificada.")
     return errors
 
 
 def _credentials_pdf(protocol: str, login: str, password: str) -> bytes:
     buffer = io.BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=A4)
-    pdf.setTitle("Credenciais da denuncia")
-    pdf.drawString(72, 780, "Credenciais da denuncia")
+    pdf.setTitle("Credenciais da denúncia")
+    pdf.drawString(72, 780, "Credenciais da denúncia")
     pdf.drawString(72, 740, f"Protocolo: {protocol}")
     pdf.drawString(72, 720, f"Login: {login}")
     pdf.drawString(72, 700, f"Senha: {password}")
-    pdf.drawString(72, 660, "Guarde estas informacoes. Nao sera possivel recuperar este acesso.")
+    pdf.drawString(72, 660, "Guarde estas informações. Não será possível recuperar este acesso.")
     pdf.save()
     return buffer.getvalue()

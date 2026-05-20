@@ -3,14 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Canal de Denuncia Online{% endblock %}</title>
+    <title>{% block title %}Canal de Denúncia Online{% endblock %}</title>
     <style>
-      body { margin: 0; font-family: Arial, sans-serif; color: #17202a; background: #f5f7f8; }
-      main { max-width: 860px; margin: 0 auto; padding: 32px 20px; }
-      .panel { background: #fff; border: 1px solid #d9e1e5; border-radius: 8px; padding: 24px; }
+      body { margin: 0; font-family: Arial, sans-serif; color: #17202a; background: #f5f7f8; line-height: 1.5; }
+      main { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+      h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; }
+      p { margin: 0 0 12px; }
+      .panel { background: #fff; border: 1px solid #d9e1e5; border-radius: 8px; padding: 24px; box-shadow: 0 1px 2px rgba(23, 32, 42, 0.05); }
       label { display: block; font-weight: 700; margin-top: 16px; }
       input, select, textarea { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 10px; border: 1px solid #b8c4ca; border-radius: 6px; font: inherit; }
       textarea { min-height: 180px; resize: vertical; }
+      input:focus, select:focus, textarea:focus, button:focus, .button:focus, a:focus { outline: 3px solid #9bd4cf; outline-offset: 2px; }
       button, .button { display: inline-block; margin-top: 18px; padding: 10px 14px; border: 0; border-radius: 6px; background: #115e59; color: #fff; font-weight: 700; cursor: pointer; text-decoration: none; }
       .secondary { background: #34495e; }
       .error { background: #fff1f0; border: 1px solid #ffccc7; color: #7a1f16; padding: 12px; border-radius: 6px; }
@@ -26,6 +29,18 @@
       .muted { color: #5d6d7e; }
       .timeline { display: grid; gap: 12px; margin-top: 16px; }
       .timeline-item { border-left: 3px solid #115e59; padding: 8px 12px; background: #f8fafb; }
+      .home-hero { display: grid; gap: 12px; margin-bottom: 22px; }
+      .home-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+      .home-card { background: #fff; border: 1px solid #d9e1e5; border-radius: 8px; padding: 20px; min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; }
+      .status-badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #e8f4f2; color: #115e59; font-size: 0.9rem; font-weight: 700; }
+      .form-hint { color: #5d6d7e; font-size: 0.95rem; margin-top: 4px; }
+      @media (max-width: 720px) {
+        main { padding: 20px 14px; }
+        .panel { padding: 18px; }
+        .home-actions { grid-template-columns: 1fr; }
+        nav { flex-wrap: wrap; }
+        table { font-size: 0.92rem; }
+      }
     </style>
   </head>
   <body>

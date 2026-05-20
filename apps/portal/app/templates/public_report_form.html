@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Nova denuncia - {{ tenant.name }}{% endblock %}
+{% block content %}
+<section class="panel">
+  <h1>Canal de denuncia - {{ tenant.name }}</h1>
+  {% if errors %}
+    <div class="error">
+      {% for error in errors %}<p>{{ error }}</p>{% endfor %}
+    </div>
+  {% endif %}
+  <form method="post" action="/{{ tenant.slug }}/denuncias" enctype="multipart/form-data">
+    <label>Tipo</label>
+    <select name="report_type" id="report_type">
+      <option value="anonima">Anonima</option>
+      <option value="identificada">Identificada</option>
+    </select>
+
+    <label>Categoria</label>
+    <select name="category" required>
+      <option value="">Selecione</option>
+      {% for value, label in categories %}
+        <option value="{{ value }}">{{ label }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Descricao</label>
+    <textarea name="description" required></textarea>
+
+    <div id="identified_fields">
+      <label>Nome</label>
+      <input name="reporter_name" autocomplete="name">
+      <label>E-mail</label>
+      <input name="reporter_email" type="email" autocomplete="email">
+      <label>Telefone</label>
+      <input name="reporter_phone" autocomplete="tel">
+    </div>
+
+    <label>Anexos opcionais</label>
+    <input name="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx">
+
+    <div class="hidden-field" aria-hidden="true">
+      <label>Website</label>
+      <input name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button type="submit">Enviar denuncia</button>
+  </form>
+</section>
+<script>
+  const type = document.getElementById("report_type");
+  const fields = document.getElementById("identified_fields");
+  function syncFields() { fields.style.display = type.value === "identificada" ? "block" : "none"; }
+  type.addEventListener("change", syncFields);
+  syncFields();
+</script>
+{% endblock %}

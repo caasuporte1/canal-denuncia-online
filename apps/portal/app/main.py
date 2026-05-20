@@ -1,6 +1,27 @@
-from fastapi import FastAPI
-app=FastAPI()
-@app.get('/health')
-def health(): return {'status':'ok'}
-@app.get('/')
-def root(): return {'service':'Canal de Denuncia Online','status':'placeholder'}
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+
+from app.core.logging import configure_logging
+from app.core.rate_limit import limiter
+from app.routes.health import router as health_router
+from app.routes.public import router as public_router
+
+configure_logging()
+
+app = FastAPI()
+app.state.limiter = limiter
+
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse({"detail": "Muitas tentativas. Tente novamente mais tarde."}, status_code=429)
+
+
+@app.get("/")
+def root() -> dict[str, str]:
+    return {"service": "Canal de Denuncia Online", "status": "ok"}
+
+
+app.include_router(health_router)
+app.include_router(public_router)

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Canal de Denuncia Online{% endblock %}</title>
+    <style>
+      body { margin: 0; font-family: Arial, sans-serif; color: #17202a; background: #f5f7f8; }
+      main { max-width: 860px; margin: 0 auto; padding: 32px 20px; }
+      .panel { background: #fff; border: 1px solid #d9e1e5; border-radius: 8px; padding: 24px; }
+      label { display: block; font-weight: 700; margin-top: 16px; }
+      input, select, textarea { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 10px; border: 1px solid #b8c4ca; border-radius: 6px; font: inherit; }
+      textarea { min-height: 180px; resize: vertical; }
+      button, .button { display: inline-block; margin-top: 18px; padding: 10px 14px; border: 0; border-radius: 6px; background: #115e59; color: #fff; font-weight: 700; cursor: pointer; text-decoration: none; }
+      .secondary { background: #34495e; }
+      .error { background: #fff1f0; border: 1px solid #ffccc7; color: #7a1f16; padding: 12px; border-radius: 6px; }
+      .warning { background: #fff8e1; border: 1px solid #f6d365; padding: 12px; border-radius: 6px; }
+      .credentials { display: grid; gap: 10px; margin-top: 18px; }
+      .credential { padding: 12px; border: 1px solid #d9e1e5; border-radius: 6px; background: #f8fafb; }
+      .hidden-field { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

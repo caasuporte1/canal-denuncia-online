@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Denuncia recebida{% endblock %}
+{% block content %}
+<section class="panel">
+  {% if fake_success %}
+    <h1>Denuncia recebida</h1>
+    <p>Sua denuncia foi registrada para analise.</p>
+  {% else %}
+    <h1>Denuncia recebida</h1>
+    <p class="warning">Guarde estas informacoes. Por seguranca e para preservar o anonimato, nao sera possivel recuperar este acesso caso voce perca os dados.</p>
+    <div class="credentials" id="credentials">
+      <div class="credential"><strong>Protocolo:</strong> <span>{{ protocol }}</span></div>
+      <div class="credential"><strong>Login:</strong> <span>{{ login }}</span></div>
+      <div class="credential"><strong>Senha:</strong> <span>{{ password }}</span></div>
+    </div>
+    <button type="button" onclick="copyCredentials()">Copiar credenciais</button>
+    <form method="post" action="/{{ tenant.slug }}/denuncias/credenciais-pdf" style="display:inline">
+      <input type="hidden" name="protocol" value="{{ protocol }}">
+      <input type="hidden" name="login" value="{{ login }}">
+      <input type="hidden" name="password" value="{{ password }}">
+      <button class="secondary" type="submit">Baixar PDF de credenciais</button>
+    </form>
+  {% endif %}
+</section>
+<script>
+  function copyCredentials() {
+    const text = Array.from(document.querySelectorAll("#credentials span")).map((el) => el.textContent).join("\n");
+    navigator.clipboard.writeText(text);
+  }
+</script>
+{% endblock %}

@@ -6,22 +6,22 @@
 - Confirmar se o TLS do portal responde sem `-k`.
 - Revisar tentativas de login falhas e eventos de rate limit nos logs.
 
-## Criar tenant
+## Criar cliente
 - Acessar `/auth/login` com usuário `admin_triton`.
 - Entrar em `/admin/tenants/novo`.
-- Informar nome, documento, slug em lowercase e e-mail do admin inicial.
+- Informar razão social/nome, CNPJ, dados de contato, responsável pelo tratamento de denúncias, link do portal e admin inicial.
 - Entregar a senha temporária exibida uma única vez por canal seguro.
 
-## Validar tenant
-- Abrir `/{slug}` e criar denúncia teste.
-- Acessar `/auth/login` com o admin do tenant.
-- Confirmar que a denúncia aparece apenas para o tenant correto.
+## Validar cliente
+- Abrir `/{link-do-portal}` e criar denúncia teste.
+- Acessar `/auth/login` com o admin do cliente.
+- Confirmar que a denúncia aparece apenas para o cliente correto.
 - Responder a denúncia e validar em `/acompanhar`.
 
-## Desativar tenant
-- Acessar detalhe do tenant em `/admin/tenants/{id}`.
+## Desativar cliente
+- Acessar detalhe do cliente em `/admin/tenants/{id}`.
 - Alterar status para `inactive`.
-- Confirmar que `/{slug}` e login da empresa ficam bloqueados.
+- Confirmar que `/{link-do-portal}` e login da empresa ficam bloqueados.
 - Confirmar que `/acompanhar` continua funcionando para denúncias já criadas.
 
 ## Backup e restore

@@ -3,7 +3,7 @@
 ## Login falhando
 - Mensagem esperada para falha: `Usuário ou senha inválidos`.
 - Verificar se o usuário está `active`.
-- Para empresa, verificar se o tenant está `active`.
+- Para empresa, verificar se o cliente está `active`.
 - Conferir rate limit de login antes de repetir tentativas.
 
 ## Upload recusado

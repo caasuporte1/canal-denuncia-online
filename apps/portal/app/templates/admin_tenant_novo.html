@@ -1,36 +1,76 @@
 {% extends "base.html" %}
-{% block title %}Novo tenant{% endblock %}
+{% block title %}Novo cliente{% endblock %}
 {% block content %}
 <nav>
   <a href="/admin">Admin</a>
-  <a href="/admin/tenants">Tenants</a>
+  <a href="/admin/tenants">Clientes</a>
   <a href="/admin/denuncias">Denúncias globais</a>
 </nav>
 <section class="panel">
-  <h1>Novo tenant</h1>
+  <h1>Novo cliente</h1>
   {% if errors %}
     <div class="error">{% for error in errors %}<p>{{ error }}</p>{% endfor %}</div>
   {% endif %}
   {% if created %}
     <div class="warning">
-      <p>Tenant criado. Entregue estas credenciais ao administrador inicial uma única vez.</p>
+      <p>Cliente criado. Entregue estas credenciais ao administrador inicial uma única vez.</p>
       <p><strong>E-mail:</strong> {{ created.email }}</p>
       <p><strong>Senha temporária:</strong> {{ created.password }}</p>
+      <p><strong>Link público:</strong> denuncia.canaldenunciaonline.com.br/{{ created.tenant.slug }}</p>
     </div>
   {% endif %}
   <form method="post" action="/admin/tenants">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <label for="name">Nome empresa</label>
+    <label for="name">Razão social / Nome da empresa</label>
     <input name="name" id="name" required>
-    <label for="document">Documento</label>
+    <label for="document">CNPJ</label>
     <input name="document" id="document" required>
-    <label for="slug">Slug</label>
-    <input name="slug" id="slug" required placeholder="empresa-alpha">
+    <label for="phone">Telefone</label>
+    <input name="phone" id="phone" autocomplete="tel">
+    <label for="email">E-mail principal</label>
+    <input name="email" id="email" type="email" autocomplete="email">
+    <label for="address">Endereço</label>
+    <input name="address" id="address">
+    <label for="city">Cidade</label>
+    <input name="city" id="city">
+    <label for="state">UF</label>
+    <input name="state" id="state" maxlength="2" placeholder="SP">
+    <label for="complaints_handler_name">Nome do responsável pelo tratamento de denúncias</label>
+    <input name="complaints_handler_name" id="complaints_handler_name">
+    <label for="complaints_handler_email">E-mail do responsável pelo tratamento de denúncias</label>
+    <input name="complaints_handler_email" id="complaints_handler_email" type="email">
+    <label for="complaints_handler_phone">Telefone do responsável pelo tratamento de denúncias</label>
+    <input name="complaints_handler_phone" id="complaints_handler_phone">
     <label for="admin_name">Nome admin inicial</label>
     <input name="admin_name" id="admin_name" required>
     <label for="admin_email">E-mail admin inicial</label>
     <input name="admin_email" id="admin_email" type="email" required>
-    <button type="submit">Criar tenant</button>
+    <label for="slug">Link do portal</label>
+    <input name="slug" id="slug" required placeholder="empresa-alpha" aria-describedby="slug-help">
+    <p class="form-hint" id="slug-help">Será usado no endereço público: denuncia.canaldenunciaonline.com.br/seu-link</p>
+    <button type="submit">Criar cliente</button>
   </form>
 </section>
+<script>
+  const companyName = document.getElementById("name");
+  const portalLink = document.getElementById("slug");
+  let portalLinkTouched = false;
+
+  function slugify(value) {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .replace(/-{2,}/g, "-");
+  }
+
+  portalLink.addEventListener("input", () => { portalLinkTouched = true; });
+  companyName.addEventListener("input", () => {
+    if (!portalLinkTouched) {
+      portalLink.value = slugify(companyName.value);
+    }
+  });
+</script>
 {% endblock %}

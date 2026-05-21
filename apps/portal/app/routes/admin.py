@@ -87,6 +87,14 @@ def create_tenant(
     name: str = Form(...),
     document: str = Form(...),
     slug: str = Form(...),
+    phone: str = Form(""),
+    email: str = Form(""),
+    address: str = Form(""),
+    city: str = Form(""),
+    state: str = Form(""),
+    complaints_handler_name: str = Form(""),
+    complaints_handler_email: str = Form(""),
+    complaints_handler_phone: str = Form(""),
     admin_name: str = Form(...),
     admin_email: str = Form(...),
     csrf_token: str = Form(...),
@@ -94,11 +102,22 @@ def create_tenant(
     db: Session = Depends(get_db),
 ):
     _csrf_or_400(request, csrf_token)
-    errors = _validate_tenant_form(name, document, slug, admin_name, admin_email)
-    if db.scalar(select(Tenant.id).where(Tenant.slug == slug.strip())):
-        errors.append("Slug já cadastrado.")
+    slug_value = slug.strip().lower()
+    state_value = state.strip().upper()
+    errors = _validate_tenant_form(
+        name,
+        document,
+        slug_value,
+        admin_name,
+        admin_email,
+        email,
+        complaints_handler_email,
+        state_value,
+    )
+    if db.scalar(select(Tenant.id).where(Tenant.slug == slug_value)):
+        errors.append("Link do portal já cadastrado.")
     if db.scalar(select(Tenant.id).where(Tenant.document == document.strip())):
-        errors.append("Documento já cadastrado.")
+        errors.append("CNPJ já cadastrado.")
     if errors:
         return templates.TemplateResponse(
             "admin_tenant_novo.html",
@@ -107,7 +126,20 @@ def create_tenant(
         )
 
     temp_password = generate_password()
-    tenant = Tenant(name=name.strip(), document=document.strip(), slug=slug.strip(), status="active")
+    tenant = Tenant(
+        name=name.strip(),
+        document=document.strip(),
+        slug=slug_value,
+        phone=phone.strip() or None,
+        email=email.strip().lower() or None,
+        address=address.strip() or None,
+        city=city.strip() or None,
+        state=state_value or None,
+        complaints_handler_name=complaints_handler_name.strip() or None,
+        complaints_handler_email=complaints_handler_email.strip().lower() or None,
+        complaints_handler_phone=complaints_handler_phone.strip() or None,
+        status="active",
+    )
     db.add(tenant)
     db.flush()
     admin = User(
@@ -222,15 +254,30 @@ def global_reports(
     )
 
 
-def _validate_tenant_form(name: str, document: str, slug: str, admin_name: str, admin_email: str) -> list[str]:
+def _validate_tenant_form(
+    name: str,
+    document: str,
+    slug: str,
+    admin_name: str,
+    admin_email: str,
+    email: str,
+    complaints_handler_email: str,
+    state: str,
+) -> list[str]:
     errors: list[str] = []
     slug = slug.strip()
     if not name.strip():
-        errors.append("Nome obrigatório.")
+        errors.append("Razão social / Nome da empresa obrigatório.")
     if not document.strip():
-        errors.append("Documento obrigatório.")
+        errors.append("CNPJ obrigatório.")
     if not SLUG_RE.fullmatch(slug):
-        errors.append("Slug inválido. Use apenas letras minúsculas, números e hifens.")
+        errors.append("Link do portal inválido. Use apenas letras minúsculas, números e hifens.")
+    if email.strip() and "@" not in email.strip():
+        errors.append("E-mail principal inválido.")
+    if complaints_handler_email.strip() and "@" not in complaints_handler_email.strip():
+        errors.append("E-mail do responsável inválido.")
+    if state.strip() and not re.fullmatch(r"[A-Z]{2}", state.strip()):
+        errors.append("UF inválida.")
     if not admin_name.strip():
         errors.append("Nome do admin obrigatório.")
     if "@" not in admin_email.strip():

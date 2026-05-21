@@ -20,6 +20,7 @@ def test_homepage_portal_exibe_acessos_principais():
     assert "Fazer denúncia" in response.text
     assert 'href="/acompanhar"' in response.text
     assert 'href="/auth/login"' in response.text
+    assert "Acesso administrativo" in response.text
 
 
 def test_favicon_placeholder_disponivel():

@@ -32,12 +32,12 @@ def admin_data():
             role="admin_triton",
             status="active",
         )
-        tenant = Tenant(name=f"Tenant Admin {marker}", document=f"TA{marker}", slug=f"tenant-admin-{marker}", status="active")
+        tenant = Tenant(name=f"Cliente Admin {marker}", document=f"TA{marker}", slug=f"tenant-admin-{marker}", status="active")
         db.add_all([root, tenant])
         db.flush()
         tenant_admin = User(
             tenant_id=tenant.id,
-            name="Tenant Admin",
+            name="Admin Cliente",
             email=f"tenant-admin-{marker}@example.invalid",
             password_hash=hash_password("Admin123!"),
             role="tenant_admin",
@@ -107,6 +107,28 @@ def test_admin_login(client, admin_data):
     assert response.headers["location"] == "/admin"
 
 
+def test_admin_dashboard_mostra_clientes(client, admin_data):
+    login_admin(client, admin_data["root_email"], "10.100.0.13")
+    response = client.get("/admin", headers={"x-forwarded-for": "10.100.0.13"})
+    assert response.status_code == 200
+    assert "Clientes" in response.text
+    assert "Novo cliente" in response.text
+    assert "Total de tenants" not in response.text
+    assert ">Tenants<" not in response.text
+
+
+def test_form_novo_cliente_mostra_link_portal_e_sugestao(client, admin_data):
+    login_admin(client, admin_data["root_email"], "10.100.0.14")
+    response = client.get("/admin/tenants/novo", headers={"x-forwarded-for": "10.100.0.14"})
+    assert response.status_code == 200
+    assert "Novo cliente" in response.text
+    assert "Link do portal" in response.text
+    assert "denuncia.canaldenunciaonline.com.br/seu-link" in response.text
+    assert "slugify" in response.text
+    assert "Tenant" not in response.text
+    assert "Slug" not in response.text
+
+
 def test_tenant_admin_nao_acessa_admin(client, admin_data):
     assert login_tenant(client, admin_data["tenant_admin_email"], "10.100.0.4").status_code == 303
     response = client.get("/admin", headers={"x-forwarded-for": "10.100.0.4"})
@@ -128,6 +150,14 @@ def test_criacao_tenant(client, admin_data):
             "csrf_token": csrf,
             "name": "Empresa Alpha",
             "document": f"DOC{uuid.uuid4().hex[:10]}",
+            "phone": "11999999999",
+            "email": f"contato-{slug}@example.invalid",
+            "address": "Rua Alpha, 100",
+            "city": "Sao Paulo",
+            "state": "sp",
+            "complaints_handler_name": "Responsavel Denuncias",
+            "complaints_handler_email": f"responsavel-{slug}@example.invalid",
+            "complaints_handler_phone": "11888888888",
             "slug": slug,
             "admin_name": "Admin Empresa Alpha",
             "admin_email": f"admin-{slug}@example.invalid",
@@ -136,14 +166,30 @@ def test_criacao_tenant(client, admin_data):
     )
     assert response.status_code == 200
     assert "Senha temporária" in response.text
+    assert "Cliente criado" in response.text
     db = SessionLocal()
     try:
         tenant = db.scalar(select(Tenant).where(Tenant.slug == slug))
         assert tenant is not None
+        assert tenant.phone == "11999999999"
+        assert tenant.email == f"contato-{slug}@example.invalid"
+        assert tenant.address == "Rua Alpha, 100"
+        assert tenant.city == "Sao Paulo"
+        assert tenant.state == "SP"
+        assert tenant.complaints_handler_name == "Responsavel Denuncias"
+        assert tenant.complaints_handler_email == f"responsavel-{slug}@example.invalid"
+        assert tenant.complaints_handler_phone == "11888888888"
         admin = db.scalar(select(User).where(User.tenant_id == tenant.id, User.role == "tenant_admin"))
         assert admin is not None
+        tenant_id = tenant.id
     finally:
         db.close()
+
+    detail = client.get(f"/admin/tenants/{tenant_id}", headers={"x-forwarded-for": "10.100.0.5"})
+    assert detail.status_code == 200
+    assert "Responsável pelo tratamento de denúncias" in detail.text
+    assert "Responsavel Denuncias" in detail.text
+    assert "Link público do canal" in detail.text
 
 
 def test_slug_invalido_e_duplicado_recusados(client, admin_data):
@@ -161,7 +207,7 @@ def test_slug_invalido_e_duplicado_recusados(client, admin_data):
         headers={"x-forwarded-for": "10.100.0.6"},
     )
     assert invalid.status_code == 400
-    assert "Slug inválido" in invalid.text
+    assert "Link do portal inválido" in invalid.text
     duplicate = client.post(
         "/admin/tenants",
         data={
@@ -175,7 +221,7 @@ def test_slug_invalido_e_duplicado_recusados(client, admin_data):
         headers={"x-forwarded-for": "10.100.0.6"},
     )
     assert duplicate.status_code == 400
-    assert "Slug já cadastrado" in duplicate.text
+    assert "Link do portal já cadastrado" in duplicate.text
 
 
 def test_tenant_inactive_bloqueia_publico_e_login_mas_preserva_acompanhamento(client, admin_data):

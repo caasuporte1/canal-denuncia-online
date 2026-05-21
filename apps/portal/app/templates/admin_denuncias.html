@@ -3,13 +3,14 @@
 {% block content %}
 <nav>
   <a href="/admin">Admin</a>
-  <a href="/admin/tenants">Tenants</a>
+  <a href="/admin/tenants">Clientes</a>
+  <a href="/admin/tenants/novo">Novo cliente</a>
   <a href="/admin/denuncias">Denúncias globais</a>
 </nav>
 <section class="panel">
   <h1>Denúncias globais</h1>
   <form method="get" action="/admin/denuncias">
-    <label>Tenant</label>
+    <label>Cliente</label>
     <select name="tenant">
       <option value="">Todos</option>
       {% for tenant in tenants %}
@@ -35,7 +36,7 @@
     <button type="submit">Filtrar</button>
   </form>
   <table>
-    <thead><tr><th>Tenant</th><th>Protocolo</th><th>Status</th><th>Categoria</th><th>Data</th></tr></thead>
+    <thead><tr><th>Cliente</th><th>Protocolo</th><th>Status</th><th>Categoria</th><th>Data</th></tr></thead>
     <tbody>
       {% for report, tenant in rows %}
         <tr>

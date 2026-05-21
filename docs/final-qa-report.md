@@ -25,11 +25,11 @@ Data: 2026-05-20
 
 ## Fluxo C — Admin Triton
 - Login `admin_triton`: validado por testes.
-- Criação de tenant: validada por testes.
-- Desativação de tenant: validada por testes.
+- Criação de cliente: validada por testes.
+- Desativação de cliente: validada por testes.
 - Visão global de denúncias: validada por testes.
 
-## Fluxo D — Tenant inativo
+## Fluxo D — Cliente inativo
 - Formulário público bloqueado.
 - Login empresa bloqueado.
 - Acompanhamento de denúncia existente preservado.

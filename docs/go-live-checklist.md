@@ -26,7 +26,7 @@
 - [x] Smoke piloto funcionando.
 - [x] Upload válido funcionando.
 - [x] Upload inválido recusado.
-- [x] Tenant inativo bloqueia novo uso e preserva acompanhamento.
+- [x] Cliente inativo bloqueia novo uso e preserva acompanhamento.
 
 ## Segurança
 - [x] CSRF validado em forms autenticados.

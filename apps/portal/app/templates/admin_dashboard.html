@@ -3,7 +3,8 @@
 {% block content %}
 <nav>
   <a href="/admin">Admin</a>
-  <a href="/admin/tenants">Tenants</a>
+  <a href="/admin/tenants">Clientes</a>
+  <a href="/admin/tenants/novo">Novo cliente</a>
   <a href="/admin/denuncias">Denúncias globais</a>
   <form class="inline" method="post" action="/auth/logout">
     <input type="hidden" name="csrf_token" value="{{ current.session.csrf_token }}">
@@ -12,7 +13,11 @@
 </nav>
 <section class="panel">
   <h1>Admin Triton</h1>
-  <p>Total de tenants: <strong>{{ total_tenants }}</strong></p>
+  <div class="page-actions">
+    <a class="button" href="/admin/tenants">Clientes</a>
+    <a class="button secondary" href="/admin/tenants/novo">Novo cliente</a>
+  </div>
+  <p>Total de clientes: <strong>{{ total_tenants }}</strong></p>
   <p>Total de denúncias: <strong>{{ total_reports }}</strong></p>
   <h2>Denúncias por status</h2>
   <table>
@@ -24,12 +29,12 @@
       {% endfor %}
     </tbody>
   </table>
-  <h2>Últimos tenants</h2>
+  <h2>Últimos clientes</h2>
   <ul>
     {% for tenant in latest_tenants %}
       <li><a href="/admin/tenants/{{ tenant.id }}">{{ tenant.name }}</a> <span class="muted">{{ tenant.status }}</span></li>
     {% else %}
-      <li>Nenhum tenant cadastrado.</li>
+      <li>Nenhum cliente cadastrado.</li>
     {% endfor %}
   </ul>
 </section>

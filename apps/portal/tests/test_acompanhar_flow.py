@@ -39,6 +39,9 @@ def reports_data():
             reporter_ip_hash="hash-a",
             category="outros",
             description="Descricao denuncia A",
+            involved_department="RH",
+            involved_location="Unidade Sul",
+            involved_role="Gestor",
             status="aguardando_resposta",
         )
         report_b = Report(
@@ -155,6 +158,10 @@ def test_timeline_renderiza_e_filtra_interno(client, reports_data):
     assert response.status_code == 200
     assert "Resposta visivel da empresa" in response.text
     assert "Mensagem visivel do sistema" in response.text
+    assert "Contexto do ocorrido" in response.text
+    assert "RH" in response.text
+    assert "Unidade Sul" in response.text
+    assert "Gestor" in response.text
     assert "Mensagem interna invisivel" not in response.text
 
 

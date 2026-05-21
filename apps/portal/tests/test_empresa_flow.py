@@ -44,6 +44,9 @@ def empresa_data():
             reporter_ip_clear="10.1.1.1",
             category="outros",
             description="Denuncia tenant A",
+            involved_department="Produção",
+            involved_location="Turno da noite",
+            involved_role="Supervisor",
             status="recebida",
         )
         report_b = Report(
@@ -164,6 +167,16 @@ def test_cross_tenant_bloqueado(client, empresa_data):
     login(client, empresa_data["email_a"], "10.80.0.6")
     response = client.get(f"/empresa/denuncias/{empresa_data['report_b']}", headers={"x-forwarded-for": "10.80.0.6"})
     assert response.status_code == 404
+
+
+def test_detalhe_denuncia_mostra_contexto(client, empresa_data):
+    login(client, empresa_data["email_a"], "10.80.0.12")
+    response = client.get(f"/empresa/denuncias/{empresa_data['report_a']}", headers={"x-forwarded-for": "10.80.0.12"})
+    assert response.status_code == 200
+    assert "Contexto do ocorrido" in response.text
+    assert "Produção" in response.text
+    assert "Turno da noite" in response.text
+    assert "Supervisor" in response.text
 
 
 def test_criacao_resposta(client, empresa_data):

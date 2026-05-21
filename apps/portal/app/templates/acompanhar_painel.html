@@ -21,6 +21,15 @@
   <h2>Descrição original</h2>
   <p>{{ report.description }}</p>
 
+  <h2>Contexto do ocorrido</h2>
+  {% if report.involved_department or report.involved_location or report.involved_role %}
+    <p><strong>Setor / área envolvida:</strong> {{ report.involved_department or "-" }}</p>
+    <p><strong>Unidade / local:</strong> {{ report.involved_location or "-" }}</p>
+    <p><strong>Função/cargo aproximado:</strong> {{ report.involved_role or "-" }}</p>
+  {% else %}
+    <p>Não informado.</p>
+  {% endif %}
+
   <h2>Respostas</h2>
   <div class="timeline">
     {% for message in messages %}

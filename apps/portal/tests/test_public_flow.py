@@ -53,6 +53,11 @@ def test_get_triton_exibe_formulario(client):
     response = client.get("/triton", headers=headers("10.10.0.1"))
     assert response.status_code == 200
     assert "Enviar denúncia" in response.text
+    assert "Contexto do ocorrido" in response.text
+    assert "Setor / área envolvida" in response.text
+    assert "Unidade / local" in response.text
+    assert "Função/cargo aproximado da pessoa envolvida" in response.text
+    assert "qual empresa" not in response.text.lower()
 
 
 def test_get_tenant_inexistente_retorna_pagina_amigavel(client):
@@ -80,6 +85,39 @@ def test_post_cria_denuncia_anonima_e_credenciais(client):
         assert "2026" not in report.protocol
         assert report.reporter_ip_hash is not None
         assert report.reporter_ip_clear is None
+        assert report.involved_department is None
+        assert report.involved_location is None
+        assert report.involved_role is None
+    finally:
+        db.close()
+
+
+def test_denuncia_anonima_com_contexto_persiste_sem_audit_sensivel(client):
+    response = client.post(
+        "/triton/denuncias",
+        data={
+            "report_type": "anonima",
+            "category": "outros",
+            "description": "Descricao anonima com contexto",
+            "involved_department": "Comercial sigiloso",
+            "involved_location": "Filial Norte sigilosa",
+            "involved_role": "Gestor sigiloso",
+        },
+        headers=headers("10.10.0.13"),
+    )
+    assert response.status_code == 200
+    db = SessionLocal()
+    try:
+        report = db.scalar(select(Report).where(Report.description == "Descricao anonima com contexto"))
+        assert report is not None
+        assert report.involved_department == "Comercial sigiloso"
+        assert report.involved_location == "Filial Norte sigilosa"
+        assert report.involved_role == "Gestor sigiloso"
+        audit_rows = db.scalars(select(AuditLog).where(AuditLog.report_id == report.id)).all()
+        audit_text = " ".join(str(row.metadata_json or {}) for row in audit_rows)
+        assert "Comercial sigiloso" not in audit_text
+        assert "Filial Norte sigilosa" not in audit_text
+        assert "Gestor sigiloso" not in audit_text
     finally:
         db.close()
 
@@ -139,24 +177,31 @@ def test_honeypot_nao_cria_denuncia_real(client):
 
 
 def test_denuncia_identificada_grava_ip_claro(client):
+    description = f"Descricao identificada {random.randint(100000, 999999)}"
     response = client.post(
         "/triton/denuncias",
         data={
             "report_type": "identificada",
             "category": "conduta_etica",
-            "description": "Descricao identificada",
+            "description": description,
             "reporter_name": "Pessoa Teste",
             "reporter_email": "pessoa@example.invalid",
+            "involved_department": "RH",
+            "involved_location": "Matriz",
+            "involved_role": "Supervisor",
         },
         headers=headers("10.10.0.7"),
     )
     assert response.status_code == 200
     db = SessionLocal()
     try:
-        report = db.scalar(select(Report).where(Report.description == "Descricao identificada"))
+        report = db.scalar(select(Report).where(Report.description == description))
         assert report is not None
         assert report.reporter_ip_clear == "10.10.0.7"
         assert report.reporter_ip_hash is None
+        assert report.involved_department == "RH"
+        assert report.involved_location == "Matriz"
+        assert report.involved_role == "Supervisor"
     finally:
         db.close()
 

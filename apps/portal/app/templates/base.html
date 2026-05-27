@@ -30,10 +30,14 @@
       .inline { display: inline; }
       .muted { color: #5d6d7e; }
       .timeline { display: grid; gap: 12px; margin-top: 16px; }
-      .timeline-item { border-left: 3px solid #115e59; padding: 8px 12px; background: #f8fafb; }
+      .timeline-item { border-left: 3px solid #115e59; padding: 10px 12px; background: #f8fafb; border-radius: 0 6px 6px 0; }
+      .timeline-item.company-response { background: #eef8f6; border-left-color: #0f766e; }
       .home-hero { display: grid; gap: 12px; margin-bottom: 22px; }
       .home-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
       .home-card { background: #fff; border: 1px solid #d9e1e5; border-radius: 8px; padding: 20px; min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; }
+      .steps { display: grid; gap: 8px; padding-left: 22px; }
+      .footer-links { border-top: 1px solid #d9e1e5; margin-top: 28px; padding-top: 18px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.95rem; }
+      .footer-links a { color: #115e59; font-weight: 700; text-decoration: none; }
       .brand-link { color: #17202a; font-weight: 700; text-decoration: none; }
       .page-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
       .status-badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #e8f4f2; color: #115e59; font-size: 0.9rem; font-weight: 700; }
@@ -54,6 +58,14 @@
         {% block nav %}{% endblock %}
       </nav>
       {% block content %}{% endblock %}
+      <footer class="footer-links" aria-label="Links úteis">
+        <a href="/">Início</a>
+        <a href="/acompanhar">Acompanhar denúncia</a>
+        <a href="/privacidade">Privacidade</a>
+        <a href="/termos">Termos de Uso</a>
+        <a href="/orientacoes">Orientações</a>
+        <a href="/auth/login">Área da empresa</a>
+      </footer>
     </main>
   </body>
 </html>

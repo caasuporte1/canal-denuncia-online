@@ -53,6 +53,9 @@ def test_get_triton_exibe_formulario(client):
     response = client.get("/triton", headers=headers("10.10.0.1"))
     assert response.status_code == 200
     assert "Enviar denúncia" in response.text
+    assert "Este canal é vinculado à empresa que forneceu este link" in response.text
+    assert "Não é necessário selecionar a empresa" in response.text
+    assert "guarde o protocolo, login e senha" in response.text
     assert "Contexto do ocorrido" in response.text
     assert "Setor / área envolvida" in response.text
     assert "Unidade / local" in response.text
@@ -75,6 +78,9 @@ def test_post_cria_denuncia_anonima_e_credenciais(client):
     assert response.status_code == 200
     assert "CDO-" in response.text
     assert "USR-" in response.text
+    assert "Guarde estas informações com segurança" in response.text
+    assert "senha não poderá ser recuperada depois" in response.text
+    assert 'href="/acompanhar"' in response.text
 
     db = SessionLocal()
     try:

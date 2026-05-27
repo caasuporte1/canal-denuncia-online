@@ -130,6 +130,13 @@ def test_login_valido(client, empresa_data):
     assert response.headers["location"] == "/empresa"
 
 
+def test_login_empresa_texto_claro(client):
+    response = client.get("/auth/login", headers={"x-forwarded-for": "10.80.0.20"})
+    assert response.status_code == 200
+    assert "Área da empresa" in response.text
+    assert "Acesse para acompanhar e tratar denúncias recebidas." in response.text
+
+
 def test_login_invalido(client, empresa_data):
     response = client.post(
         "/auth/login",
@@ -156,6 +163,8 @@ def test_acesso_sem_sessao_redirect_login(client):
 
 def test_listagem_tenant_correta(client, empresa_data):
     login(client, empresa_data["email_a"], "10.80.0.5")
+    dashboard = client.get("/empresa", headers={"x-forwarded-for": "10.80.0.5"})
+    assert "Você visualiza apenas denúncias vinculadas à sua empresa." in dashboard.text
     response = client.get("/empresa/denuncias", headers={"x-forwarded-for": "10.80.0.5"})
     assert response.status_code == 200
     assert "Denuncia tenant A" not in response.text

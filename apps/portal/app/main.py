@@ -32,6 +32,21 @@ def root(request: Request):
     return templates.TemplateResponse("portal_home.html", {"request": request})
 
 
+@app.get("/privacidade", response_class=HTMLResponse)
+def privacy(request: Request):
+    return templates.TemplateResponse("privacidade.html", {"request": request})
+
+
+@app.get("/termos", response_class=HTMLResponse)
+def terms(request: Request):
+    return templates.TemplateResponse("termos.html", {"request": request})
+
+
+@app.get("/orientacoes", response_class=HTMLResponse)
+def guidance(request: Request):
+    return templates.TemplateResponse("orientacoes.html", {"request": request})
+
+
 app.include_router(health_router)
 app.include_router(acompanhar_router)
 app.include_router(auth_router)

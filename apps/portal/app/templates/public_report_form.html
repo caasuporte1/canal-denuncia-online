@@ -3,7 +3,8 @@
 {% block content %}
 <section class="panel">
   <h1>Canal de denúncia - {{ tenant.name }}</h1>
-  <p class="muted">Descreva a situação com clareza. Anexos são opcionais e ajudam na análise.</p>
+  <p class="warning">Este canal é vinculado à empresa que forneceu este link. Não é necessário selecionar a empresa.</p>
+  <p class="muted">Você poderá registrar a denúncia de forma anônima ou identificada. Ao final, guarde o protocolo, login e senha para acompanhar o andamento.</p>
   {% if errors %}
     <div class="error">
       {% for error in errors %}<p>{{ error }}</p>{% endfor %}
@@ -28,7 +29,7 @@
     <textarea name="description" id="description" required placeholder="Informe o que aconteceu, quando, onde e quem pode estar envolvido."></textarea>
 
     <h2>Contexto do ocorrido</h2>
-    <p class="form-hint">Essas informações são opcionais, mas ajudam a empresa a encaminhar e apurar melhor o relato.</p>
+    <p class="form-hint">As informações abaixo são opcionais, mas ajudam a empresa a localizar melhor o fato relatado.</p>
     <label for="involved_department">Setor / área envolvida</label>
     <input name="involved_department" id="involved_department" placeholder="Ex.: Comercial, Produção, RH, Portaria">
     <label for="involved_location">Unidade / local</label>

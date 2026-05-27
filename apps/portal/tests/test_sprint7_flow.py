@@ -16,11 +16,30 @@ def test_homepage_portal_exibe_acessos_principais():
     response = client.get("/")
     assert response.status_code == 200
     assert "Canal de Denúncia Online" in response.text
+    assert "Ambiente seguro para registrar, acompanhar e tratar relatos internos." in response.text
     assert 'href="/static/favicon.svg"' in response.text
     assert "Fazer denúncia" in response.text
+    assert "Utilize o link fornecido pela sua empresa" in response.text
     assert 'href="/acompanhar"' in response.text
     assert 'href="/auth/login"' in response.text
     assert "Acesso administrativo" in response.text
+    assert "Como funciona" in response.text
+    assert "Guarde protocolo, login e senha" in response.text
+
+
+def test_paginas_institucionais_provisorias():
+    client = TestClient(app, base_url="https://testserver")
+    pages = [
+        ("/privacidade", "Privacidade", "validação jurídica/compliance"),
+        ("/termos", "Termos de Uso", "validação jurídica/compliance"),
+        ("/orientacoes", "Orientações ao usuário", "Use o canal de forma responsável."),
+    ]
+    for path, title, content in pages:
+        response = client.get(path)
+        assert response.status_code == 200
+        assert title in response.text
+        assert content in response.text
+        assert "Início" in response.text
 
 
 def test_favicon_placeholder_disponivel():

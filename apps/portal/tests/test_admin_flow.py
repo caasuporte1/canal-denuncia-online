@@ -115,6 +115,7 @@ def test_admin_dashboard_mostra_clientes(client, admin_data):
     assert "Novo cliente" in response.text
     assert "Total de tenants" not in response.text
     assert ">Tenants<" not in response.text
+    assert "Slug" not in response.text
 
 
 def test_form_novo_cliente_mostra_link_portal_e_sugestao(client, admin_data):
@@ -127,6 +128,23 @@ def test_form_novo_cliente_mostra_link_portal_e_sugestao(client, admin_data):
     assert "slugify" in response.text
     assert "Tenant" not in response.text
     assert "Slug" not in response.text
+
+
+def test_interface_admin_principal_nao_mostra_tenant_ou_slug(client, admin_data):
+    login_admin(client, admin_data["root_email"], "10.100.0.15")
+    pages = [
+        "/admin",
+        "/admin/tenants",
+        f"/admin/tenants/{admin_data['tenant_id']}",
+        "/admin/denuncias",
+    ]
+    for path in pages:
+        response = client.get(path, headers={"x-forwarded-for": "10.100.0.15"})
+        assert response.status_code == 200
+        assert ">Tenant<" not in response.text
+        assert ">Tenants<" not in response.text
+        assert "Novo tenant" not in response.text
+        assert "Slug" not in response.text
 
 
 def test_tenant_admin_nao_acessa_admin(client, admin_data):

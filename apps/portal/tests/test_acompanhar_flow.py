@@ -94,6 +94,12 @@ def test_login_valido_cria_sessao(client, reports_data):
     assert settings.complainant_session_cookie_name in client.cookies
 
 
+def test_login_exibe_orientacao_de_credenciais(client):
+    response = client.get("/acompanhar", headers={"x-forwarded-for": "10.90.0.20"})
+    assert response.status_code == 200
+    assert "Informe protocolo, login e senha recebidos ao registrar sua denúncia." in response.text
+
+
 def test_login_invalido_mensagem_generica(client, reports_data):
     response = client.post(
         "/acompanhar/login",
@@ -158,6 +164,7 @@ def test_timeline_renderiza_e_filtra_interno(client, reports_data):
     assert response.status_code == 200
     assert "Resposta visivel da empresa" in response.text
     assert "Mensagem visivel do sistema" in response.text
+    assert "company-response" in response.text
     assert "Contexto do ocorrido" in response.text
     assert "RH" in response.text
     assert "Unidade Sul" in response.text

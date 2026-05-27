@@ -3,8 +3,8 @@
 {% block content %}
 <section class="panel">
   <span class="status-badge">Acesso restrito</span>
-  <h1>Área da empresa e Admin Triton</h1>
-  <p class="muted">Entre com seu e-mail corporativo e senha cadastrada.</p>
+  <h1>Área da empresa</h1>
+  <p class="muted">Acesse para acompanhar e tratar denúncias recebidas.</p>
   {% if error %}<div class="error">{{ error }}</div>{% endif %}
   <form method="post" action="/auth/login">
     <label for="email">E-mail</label>

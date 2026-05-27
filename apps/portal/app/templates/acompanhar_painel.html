@@ -13,7 +13,7 @@
   <p><strong>Protocolo:</strong> {{ report.protocol }}</p>
   <p><strong>Status:</strong> <span class="status-badge">{{ statuses.get(report.status, report.status) }}</span></p>
   <p><strong>Categoria:</strong> {{ categories.get(report.category, report.category) }}</p>
-  <p><strong>Data de criação:</strong> {{ report.created_at }}</p>
+  <p><strong>Data de criação:</strong> {{ report.created_at.strftime("%d/%m/%Y %H:%M") }}</p>
   {% if report.is_anonymous %}
     <p><strong>Tipo:</strong> Denúncia anônima</p>
   {% endif %}
@@ -33,9 +33,9 @@
   <h2>Respostas</h2>
   <div class="timeline">
     {% for message in messages %}
-      <div class="timeline-item">
+      <div class="timeline-item {% if message.sender_type == 'empresa' %}company-response{% endif %}">
         <strong>{% if message.sender_type == "empresa" %}Empresa{% else %}Sistema{% endif %}</strong>
-        <div class="muted">{{ message.created_at }}</div>
+        <div class="muted">{{ message.created_at.strftime("%d/%m/%Y %H:%M") }}</div>
         <p>{{ message.message }}</p>
       </div>
     {% else %}

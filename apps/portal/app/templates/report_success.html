@@ -7,7 +7,8 @@
     <p>Sua denúncia foi registrada para análise.</p>
   {% else %}
     <h1>Denúncia recebida</h1>
-    <p class="warning">Guarde estas informações. Por segurança e para preservar o anonimato, não será possível recuperar este acesso caso você perca os dados.</p>
+    <p class="warning">Guarde estas informações com segurança. Por proteção do canal, a senha não poderá ser recuperada depois.</p>
+    <p>Com esses dados você poderá acompanhar a resposta da empresa pelo portal.</p>
     <div class="credentials" id="credentials">
       <div class="credential"><strong>Protocolo:</strong> <span>{{ protocol }}</span></div>
       <div class="credential"><strong>Login:</strong> <span>{{ login }}</span></div>
@@ -20,6 +21,7 @@
       <input type="hidden" name="password" value="{{ password }}">
       <button class="secondary" type="submit">Baixar PDF de credenciais</button>
     </form>
+    <a class="button secondary" href="/acompanhar">Acompanhar denúncia</a>
   {% endif %}
 </section>
 <script>

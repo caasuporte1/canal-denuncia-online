@@ -25,21 +25,36 @@ def test_homepage_portal_exibe_acessos_principais():
     assert "Acesso administrativo" in response.text
     assert "Como funciona" in response.text
     assert "Guarde protocolo, login e senha" in response.text
+    assert "Canal seguro para registro e acompanhamento de relatos internos" in response.text
+    assert "Operado via plataforma online segura." in response.text
+    assert 'href="/orientacoes">Fazer denúncia' in response.text
 
 
 def test_paginas_institucionais_provisorias():
     client = TestClient(app, base_url="https://testserver")
     pages = [
-        ("/privacidade", "Privacidade", "validação jurídica/compliance"),
-        ("/termos", "Termos de Uso", "validação jurídica/compliance"),
-        ("/orientacoes", "Orientações ao usuário", "Use o canal de forma responsável."),
+        ("/privacidade", "Privacidade", "O que é o Canal", "Denúncias anônimas"),
+        ("/termos", "Termos de Uso", "Objetivo do canal", "Responsabilidade sobre credenciais"),
+        ("/orientacoes", "Orientações ao usuário", "Como registrar uma denúncia", "não substitui serviços de emergência"),
     ]
-    for path, title, content in pages:
+    for path, title, content, extra in pages:
         response = client.get(path)
         assert response.status_code == 200
         assert title in response.text
         assert content in response.text
+        assert extra in response.text
         assert "Início" in response.text
+        assert "Canal seguro para registro e acompanhamento de relatos internos" in response.text
+        assert "© Canal de Denúncia Online" in response.text
+
+
+def test_paginas_institucionais_nao_prometem_conformidade_absoluta():
+    client = TestClient(app, base_url="https://testserver")
+    for path in ["/privacidade", "/termos", "/orientacoes"]:
+        response = client.get(path)
+        content = response.text.split("<section", 1)[1].split("</section>", 1)[0]
+        assert "100%" not in content
+        assert "conformidade LGPD" not in content
 
 
 def test_favicon_placeholder_disponivel():

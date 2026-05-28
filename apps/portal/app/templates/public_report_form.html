@@ -11,33 +11,40 @@
     </div>
   {% endif %}
   <form method="post" action="/{{ tenant.slug }}/denuncias" enctype="multipart/form-data">
-    <label for="report_type">Tipo</label>
-    <select name="report_type" id="report_type">
-      <option value="anonima">Anônima</option>
-      <option value="identificada">Identificada</option>
-    </select>
+    <div class="form-section">
+      <h2>Dados principais</h2>
+      <label for="report_type">Tipo</label>
+      <select name="report_type" id="report_type">
+        <option value="anonima">Anônima</option>
+        <option value="identificada">Identificada</option>
+      </select>
 
-    <label for="category">Categoria</label>
-    <select name="category" id="category" required>
-      <option value="">Selecione</option>
-      {% for value, label in categories %}
-        <option value="{{ value }}">{{ label }}</option>
-      {% endfor %}
-    </select>
+      <label for="category">Categoria</label>
+      <select name="category" id="category" required>
+        <option value="">Selecione</option>
+        {% for value, label in categories %}
+          <option value="{{ value }}">{{ label }}</option>
+        {% endfor %}
+      </select>
 
-    <label for="description">Descrição</label>
-    <textarea name="description" id="description" required placeholder="Informe o que aconteceu, quando, onde e quem pode estar envolvido."></textarea>
+      <label for="description">Descrição</label>
+      <textarea name="description" id="description" required placeholder="Informe o que aconteceu, quando, onde e quem pode estar envolvido."></textarea>
+    </div>
 
-    <h2>Contexto do ocorrido</h2>
-    <p class="form-hint">As informações abaixo são opcionais, mas ajudam a empresa a localizar melhor o fato relatado.</p>
-    <label for="involved_department">Setor / área envolvida</label>
-    <input name="involved_department" id="involved_department" placeholder="Ex.: Comercial, Produção, RH, Portaria">
-    <label for="involved_location">Unidade / local</label>
-    <input name="involved_location" id="involved_location" placeholder="Ex.: matriz, filial, setor, obra, turno, sala, condomínio">
-    <label for="involved_role">Função/cargo aproximado da pessoa envolvida</label>
-    <input name="involved_role" id="involved_role" placeholder="Ex.: supervisor, colega de equipe, gestor, terceirizado">
+    <div class="form-section">
+      <h2>Contexto do ocorrido</h2>
+      <p class="form-hint">As informações abaixo são opcionais, mas ajudam a empresa a localizar melhor o fato relatado.</p>
+      <label for="involved_department">Setor / área envolvida</label>
+      <input name="involved_department" id="involved_department" placeholder="Ex.: Comercial, Produção, RH, Portaria">
+      <label for="involved_location">Unidade / local</label>
+      <input name="involved_location" id="involved_location" placeholder="Ex.: matriz, filial, setor, obra, turno, sala, condomínio">
+      <label for="involved_role">Função/cargo aproximado da pessoa envolvida</label>
+      <input name="involved_role" id="involved_role" placeholder="Ex.: supervisor, colega de equipe, gestor, terceirizado">
+    </div>
 
-    <div id="identified_fields">
+    <div class="form-section" id="identified_fields">
+      <h2>Identificação</h2>
+      <p class="form-hint">Preencha apenas se desejar registrar a denúncia de forma identificada.</p>
       <label for="reporter_name">Nome</label>
       <input name="reporter_name" id="reporter_name" autocomplete="name">
       <label for="reporter_email">E-mail</label>
@@ -46,9 +53,12 @@
       <input name="reporter_phone" id="reporter_phone" autocomplete="tel">
     </div>
 
-    <label for="attachments">Anexos opcionais</label>
-    <input name="attachments" id="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx">
-    <p class="form-hint">Arquivos permitidos: PDF, JPG, PNG, DOCX e XLSX. Limite de 10 MB por arquivo.</p>
+    <div class="form-section">
+      <h2>Anexos</h2>
+      <label for="attachments">Anexos opcionais</label>
+      <input name="attachments" id="attachments" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx">
+      <p class="form-hint">Arquivos permitidos: PDF, JPG, PNG, DOCX e XLSX. Limite de 10 MB por arquivo.</p>
+    </div>
 
     <div class="hidden-field" aria-hidden="true">
       <label for="website">Website</label>

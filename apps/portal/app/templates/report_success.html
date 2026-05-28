@@ -7,6 +7,7 @@
     <p>Sua denúncia foi registrada para análise.</p>
   {% else %}
     <h1>Denúncia recebida</h1>
+    <span class="status-badge">Acesso gerado com segurança</span>
     <p class="warning">Guarde estas informações com segurança. Por proteção do canal, a senha não poderá ser recuperada depois.</p>
     <p>Com esses dados você poderá acompanhar a resposta da empresa pelo portal.</p>
     <div class="credentials" id="credentials">
@@ -14,6 +15,7 @@
       <div class="credential"><strong>Login:</strong> <span>{{ login }}</span></div>
       <div class="credential"><strong>Senha:</strong> <span>{{ password }}</span></div>
     </div>
+    <div class="page-actions">
     <button type="button" onclick="copyCredentials()">Copiar credenciais</button>
     <form method="post" action="/{{ tenant.slug }}/denuncias/credenciais-pdf" style="display:inline">
       <input type="hidden" name="protocol" value="{{ protocol }}">
@@ -22,6 +24,7 @@
       <button class="secondary" type="submit">Baixar PDF de credenciais</button>
     </form>
     <a class="button secondary" href="/acompanhar">Acompanhar denúncia</a>
+    </div>
   {% endif %}
 </section>
 <script>

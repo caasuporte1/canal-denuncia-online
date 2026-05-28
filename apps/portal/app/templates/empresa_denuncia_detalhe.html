@@ -14,6 +14,7 @@
   <p><strong>Status:</strong> <span class="status-badge">{{ statuses.get(report.status, report.status) }}</span></p>
   <p><strong>Categoria:</strong> {{ categories.get(report.category, report.category) }}</p>
   <p><strong>Data:</strong> {{ report.created_at }}</p>
+  <div class="form-section">
   {% if report.is_anonymous %}
     <p><strong>Denunciante:</strong> Denúncia anônima</p>
   {% else %}
@@ -21,9 +22,13 @@
     <p><strong>E-mail:</strong> {{ report.reporter_email }}</p>
     <p><strong>Telefone:</strong> {{ report.reporter_phone or "-" }}</p>
   {% endif %}
+  </div>
+  <div class="form-section">
   <h2>Descrição</h2>
   <p>{{ report.description }}</p>
+  </div>
 
+  <div class="form-section">
   <h2>Contexto do ocorrido</h2>
   {% if report.involved_department or report.involved_location or report.involved_role %}
     <p><strong>Setor / área envolvida:</strong> {{ report.involved_department or "-" }}</p>
@@ -32,7 +37,9 @@
   {% else %}
     <p>Não informado.</p>
   {% endif %}
+  </div>
 
+  <div class="form-section">
   <h2>Anexos</h2>
   <ul>
     {% for attachment in report.attachments %}
@@ -43,7 +50,9 @@
       <li>Nenhum anexo.</li>
     {% endfor %}
   </ul>
+  </div>
 
+  <div class="form-section">
   <h2>Alterar status</h2>
   <form method="post" action="/empresa/denuncias/{{ report.id }}/status">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
@@ -54,7 +63,9 @@
     </select>
     <button type="submit">Salvar status</button>
   </form>
+  </div>
 
+  <div class="form-section">
   <h2>Responder</h2>
   <form method="post" action="/empresa/denuncias/{{ report.id }}/responder">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
@@ -62,6 +73,7 @@
     <textarea name="message" id="message" maxlength="5000" required placeholder="Registre uma resposta clara e objetiva para o denunciante."></textarea>
     <button type="submit">Registrar resposta</button>
   </form>
+  </div>
 
   <h2>Timeline</h2>
   <div class="timeline">

@@ -11,25 +11,34 @@
 </nav>
 <section class="panel">
   <h1>Denúncias</h1>
-  <form method="get" action="/empresa/denuncias">
-    <label>Status</label>
-    <select name="status">
-      <option value="">Todos</option>
-      {% for value, label in statuses.items() %}
-        <option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>
-      {% endfor %}
-    </select>
-    <label>Categoria</label>
-    <select name="category">
-      <option value="">Todas</option>
-      {% for value, label in categories.items() %}
-        <option value="{{ value }}" {% if filters.category == value %}selected{% endif %}>{{ label }}</option>
-      {% endfor %}
-    </select>
-    <label>Protocolo</label>
-    <input name="protocol" value="{{ filters.protocol }}" placeholder="CDO-XXXXXXXXXX">
-    <button type="submit">Filtrar</button>
+  <form class="filter-card" method="get" action="/empresa/denuncias">
+    <div class="filter-grid">
+      <div>
+        <label>Status</label>
+        <select name="status">
+          <option value="">Todos</option>
+          {% for value, label in statuses.items() %}
+            <option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Categoria</label>
+        <select name="category">
+          <option value="">Todas</option>
+          {% for value, label in categories.items() %}
+            <option value="{{ value }}" {% if filters.category == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Protocolo</label>
+        <input name="protocol" value="{{ filters.protocol }}" placeholder="CDO-XXXXXXXXXX">
+      </div>
+    </div>
+    <button type="submit">Filtrar denúncias</button>
   </form>
+  <div class="table-wrap">
   <table>
     <thead>
       <tr>
@@ -44,15 +53,16 @@
       {% for report in reports %}
         <tr>
           <td><a href="/empresa/denuncias/{{ report.id }}">{{ report.protocol }}</a></td>
-          <td>{{ statuses.get(report.status, report.status) }}</td>
+          <td><span class="status-badge">{{ statuses.get(report.status, report.status) }}</span></td>
           <td>{{ categories.get(report.category, report.category) }}</td>
           <td>{% if report.is_anonymous %}Anônima{% else %}Identificada{% endif %}</td>
           <td>{{ report.created_at }}</td>
         </tr>
       {% else %}
-        <tr><td colspan="5">Nenhuma denúncia encontrada.</td></tr>
+        <tr><td colspan="5"><div class="empty-state">Nenhuma denúncia encontrada para os filtros selecionados.</div></td></tr>
       {% endfor %}
     </tbody>
   </table>
+  </div>
 </section>
 {% endblock %}

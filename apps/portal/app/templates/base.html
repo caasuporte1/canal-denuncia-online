@@ -6,55 +6,77 @@
     <title>{% block title %}Canal de Denúncia Online{% endblock %}</title>
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
     <style>
-      body { margin: 0; font-family: Arial, sans-serif; color: #17202a; background: #f4f7f7; line-height: 1.5; }
-      main { max-width: 1000px; margin: 0 auto; padding: 28px 20px; }
-      h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; }
+      :root { --petrol: #0f3d44; --petrol-2: #115e59; --slate: #17202a; --muted: #5d6d7e; --line: #d9e1e5; --soft: #f4f7f7; --soft-2: #eef8f6; --white: #fff; }
+      body { margin: 0; font-family: Arial, sans-serif; color: var(--slate); background: var(--soft); line-height: 1.5; }
+      main { max-width: 1080px; margin: 0 auto; padding: 28px 20px; }
+      h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; color: var(--slate); }
+      h1 { font-size: clamp(2rem, 4vw, 3.25rem); }
+      h2 { font-size: 1.35rem; }
       p { margin: 0 0 12px; }
-      .panel { background: #fff; border: 1px solid #d9e1e5; border-radius: 8px; padding: 26px; box-shadow: 0 1px 3px rgba(23, 32, 42, 0.06); }
-      label { display: block; font-weight: 700; margin-top: 16px; }
-      input, select, textarea { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 10px; border: 1px solid #b8c4ca; border-radius: 6px; font: inherit; }
+      .panel { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 30px; box-shadow: 0 10px 30px rgba(15, 61, 68, 0.07); }
+      label { display: block; font-weight: 700; margin-top: 18px; color: #263640; }
+      input, select, textarea { width: 100%; box-sizing: border-box; margin-top: 7px; padding: 12px 13px; border: 1px solid #b8c4ca; border-radius: 8px; font: inherit; background: #fff; transition: border-color 0.16s ease, box-shadow 0.16s ease; }
+      input[type="file"] { padding: 14px; background: #f8fafb; border-style: dashed; }
       textarea { min-height: 180px; resize: vertical; }
       input:focus, select:focus, textarea:focus, button:focus, .button:focus, a:focus { outline: 3px solid #9bd4cf; outline-offset: 2px; }
-      button, .button { display: inline-block; margin-top: 18px; padding: 10px 14px; border: 0; border-radius: 6px; background: #115e59; color: #fff; font-weight: 700; cursor: pointer; text-decoration: none; }
+      input:focus, select:focus, textarea:focus { border-color: var(--petrol-2); box-shadow: 0 0 0 3px rgba(17, 94, 89, 0.12); }
+      button, .button { display: inline-block; margin-top: 18px; padding: 11px 16px; border: 0; border-radius: 8px; background: var(--petrol-2); color: #fff; font-weight: 700; cursor: pointer; text-decoration: none; transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease; }
+      button:hover, .button:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(15, 61, 68, 0.16); }
       .secondary { background: #34495e; }
+      .button-outline { background: #fff; color: var(--petrol); border: 1px solid #afc4c4; }
       .error { background: #fff1f0; border: 1px solid #ffccc7; color: #7a1f16; padding: 12px; border-radius: 6px; }
       .warning { background: #fff8e1; border: 1px solid #f6d365; padding: 12px; border-radius: 6px; }
-      .credentials { display: grid; gap: 10px; margin-top: 18px; }
-      .credential { padding: 12px; border: 1px solid #d9e1e5; border-radius: 6px; background: #f8fafb; }
+      .credentials { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+      .credential { padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #f8fafb; }
+      .credential span { display: block; margin-top: 6px; font-size: 1.1rem; color: var(--petrol); font-weight: 700; overflow-wrap: anywhere; }
       .hidden-field { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
       .table-wrap { width: 100%; overflow-x: auto; }
-      table { width: 100%; border-collapse: collapse; margin-top: 18px; background: #fff; }
-      th, td { padding: 10px; border-bottom: 1px solid #d9e1e5; text-align: left; vertical-align: top; }
-      nav { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
-      nav a { color: #115e59; font-weight: 700; text-decoration: none; }
+      table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 18px; background: #fff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+      th, td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+      th { background: #f6faf9; color: #33464d; font-size: 0.94rem; }
+      tr:last-child td { border-bottom: 0; }
+      nav { display: flex; gap: 14px; align-items: center; margin-bottom: 22px; }
+      nav a { color: var(--petrol-2); font-weight: 700; text-decoration: none; }
       .inline { display: inline; }
       .muted { color: #5d6d7e; }
-      .timeline { display: grid; gap: 12px; margin-top: 16px; }
-      .timeline-item { border-left: 3px solid #115e59; padding: 10px 12px; background: #f8fafb; border-radius: 0 6px 6px 0; }
+      .timeline { display: grid; gap: 14px; margin-top: 16px; }
+      .timeline-item { border-left: 4px solid var(--petrol-2); padding: 14px 16px; background: #f8fafb; border-radius: 0 8px 8px 0; box-shadow: 0 1px 2px rgba(23, 32, 42, 0.04); }
       .timeline-item.company-response { background: #eef8f6; border-left-color: #0f766e; }
-      .home-hero { display: grid; gap: 12px; margin-bottom: 22px; }
+      .home-hero { display: grid; gap: 12px; margin: 18px 0 26px; padding: 30px; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 12px 34px rgba(15, 61, 68, 0.08); }
       .home-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-      .home-card { background: #fff; border: 1px solid #d9e1e5; border-radius: 8px; padding: 22px; min-height: 160px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(23, 32, 42, 0.05); }
+      .home-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 24px; min-height: 178px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 8px 24px rgba(23, 32, 42, 0.06); transition: transform 0.16s ease, box-shadow 0.16s ease; }
+      .home-card:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(15, 61, 68, 0.11); }
+      .card-icon { width: 38px; height: 38px; display: inline-grid; place-items: center; border-radius: 8px; background: var(--soft-2); color: var(--petrol); font-weight: 700; margin-bottom: 14px; }
       .steps { display: grid; gap: 8px; padding-left: 22px; }
       .content-page { max-width: 780px; }
       .content-section { border-top: 1px solid #e6ecef; padding-top: 18px; margin-top: 18px; }
       .info-box { border-left: 4px solid #115e59; background: #eef8f6; padding: 12px 14px; border-radius: 0 6px 6px 0; margin: 14px 0; }
       .info-box.warning-box { border-left-color: #b7791f; background: #fff8e1; }
-      .footer { border-top: 1px solid #d9e1e5; margin-top: 32px; padding-top: 20px; color: #455a64; }
-      .footer-title { font-weight: 700; color: #17202a; margin-bottom: 4px; }
-      .footer-links { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.95rem; margin: 12px 0; }
-      .footer-links a { color: #115e59; font-weight: 700; text-decoration: none; }
-      .brand-link { color: #17202a; font-weight: 700; text-decoration: none; }
+      .footer { border-top: 1px solid var(--line); margin-top: 36px; padding: 22px 0 4px; color: #455a64; display: grid; gap: 8px; }
+      .footer-title { font-weight: 700; color: var(--slate); margin-bottom: 4px; }
+      .footer-links { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.95rem; margin: 8px 0; }
+      .footer-links a { color: var(--petrol-2); font-weight: 700; text-decoration: none; }
+      .brand-link { color: var(--slate); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 9px; }
+      .brand-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--petrol); color: #fff; display: inline-grid; place-items: center; font-size: 0.85rem; }
       .top-links { margin-left: auto; display: flex; gap: 12px; flex-wrap: wrap; }
+      .top-links .nav-button { border: 1px solid #afc4c4; border-radius: 999px; padding: 8px 12px; color: var(--petrol); background: #fff; box-shadow: 0 1px 2px rgba(23, 32, 42, 0.04); }
       .page-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-      .status-badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #e8f4f2; color: #115e59; font-size: 0.9rem; font-weight: 700; }
+      .status-badge { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #e8f4f2; color: var(--petrol-2); font-size: 0.9rem; font-weight: 700; }
       .form-hint { color: #5d6d7e; font-size: 0.95rem; margin-top: 4px; }
+      .form-section { border: 1px solid #e2eaed; border-radius: 8px; padding: 18px; margin-top: 18px; background: #fbfdfd; }
+      .filter-card { border: 1px solid #e2eaed; border-radius: 8px; padding: 16px; background: #fbfdfd; }
+      .filter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: end; }
+      .empty-state { text-align: center; padding: 28px; color: var(--muted); background: #fbfdfd; border-radius: 8px; }
       @media (max-width: 720px) {
         main { padding: 20px 14px; }
         .panel { padding: 18px; }
+        .home-hero { padding: 22px; }
         .home-actions { grid-template-columns: 1fr; }
+        .credentials { grid-template-columns: 1fr; }
+        .filter-grid { grid-template-columns: 1fr; }
         nav { flex-wrap: wrap; }
         .top-links { margin-left: 0; width: 100%; }
+        .top-links a, .top-links .nav-button, .button, button { width: 100%; text-align: center; box-sizing: border-box; }
         table { font-size: 0.92rem; }
       }
     </style>
@@ -62,11 +84,11 @@
   <body>
     <main>
       <nav aria-label="Navegação principal">
-        <a class="brand-link" href="/">Canal de Denúncia Online</a>
+        <a class="brand-link" href="/"><span class="brand-mark">CD</span><span>Canal de Denúncia Online</span></a>
         <span class="top-links">
           <a href="/">Início</a>
           <a href="/acompanhar">Acompanhar denúncia</a>
-          <a href="/auth/login">Área da empresa</a>
+          <a class="nav-button" href="/auth/login">Área da empresa</a>
         </span>
         {% block nav %}{% endblock %}
       </nav>

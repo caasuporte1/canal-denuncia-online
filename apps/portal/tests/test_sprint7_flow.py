@@ -22,6 +22,7 @@ def test_homepage_portal_exibe_acessos_principais():
     assert "Utilize o link fornecido pela sua empresa" in response.text
     assert 'href="/acompanhar"' in response.text
     assert 'href="/auth/login"' in response.text
+    assert 'class="nav-button" href="/auth/login"' in response.text
     assert "Acesso administrativo" in response.text
     assert "Como funciona" in response.text
     assert "Guarde protocolo, login e senha" in response.text

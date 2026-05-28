@@ -23,7 +23,8 @@ def test_homepage_portal_exibe_acessos_principais():
     assert 'href="/acompanhar"' in response.text
     assert 'href="/auth/login"' in response.text
     assert 'class="nav-button" href="/auth/login"' in response.text
-    assert "Acesso administrativo" in response.text
+    assert "administrativo" not in response.text.lower()
+    assert "Área da empresa" in response.text
     assert "Como funciona" in response.text
     assert "Guarde protocolo, login e senha" in response.text
     assert "Canal seguro para registro e acompanhamento de relatos internos" in response.text

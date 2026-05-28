@@ -26,6 +26,8 @@ def test_homepage_portal_exibe_acessos_principais():
     assert "administrativo" not in response.text.lower()
     assert "Área da empresa" in response.text
     assert "Como funciona" in response.text
+    after_how_it_works = response.text.split("Como funciona", 1)[1].split("<footer", 1)[0]
+    assert 'href="/auth/login"' not in after_how_it_works
     assert "Guarde protocolo, login e senha" in response.text
     assert "Canal seguro para registro e acompanhamento de relatos internos" in response.text
     assert "Operado via plataforma online segura." in response.text

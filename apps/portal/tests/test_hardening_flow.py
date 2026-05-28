@@ -16,6 +16,23 @@ from app.services.maintenance import cleanup_orphan_uploads, retention_cleanup
 from app.services.upload import UPLOAD_ROOT
 
 
+def create_upload_test_tenant() -> str:
+    slug = f"upload-{uuid.uuid4().hex[:8]}"
+    db = SessionLocal()
+    try:
+        tenant = Tenant(
+            name=f"Upload Test {slug}",
+            document=f"U{uuid.uuid4().hex[:12]}",
+            slug=slug,
+            status="active",
+        )
+        db.add(tenant)
+        db.commit()
+        return slug
+    finally:
+        db.close()
+
+
 def test_health_expandido():
     client = TestClient(app, base_url="https://testserver")
     response = client.get("/health")
@@ -29,8 +46,9 @@ def test_health_expandido():
 
 def test_upload_mime_spoof_recusado():
     client = TestClient(app, base_url="https://testserver")
+    slug = create_upload_test_tenant()
     response = client.post(
-        "/triton/denuncias",
+        f"/{slug}/denuncias",
         data={"report_type": "anonima", "category": "outros", "description": "Spoof"},
         files={"attachments": ("arquivo.pdf", b"MZ fake exe", "application/pdf")},
         headers={"x-forwarded-for": f"10.200.0.{uuid.uuid4().int % 200 + 1}"},
@@ -41,8 +59,9 @@ def test_upload_mime_spoof_recusado():
 
 def test_upload_extensao_invalida_recusada():
     client = TestClient(app, base_url="https://testserver")
+    slug = create_upload_test_tenant()
     response = client.post(
-        "/triton/denuncias",
+        f"/{slug}/denuncias",
         data={"report_type": "anonima", "category": "outros", "description": "Extensao invalida"},
         files={"attachments": ("arquivo.exe", b"fake", "application/octet-stream")},
         headers={"x-forwarded-for": f"10.201.0.{uuid.uuid4().int % 200 + 1}"},
@@ -53,9 +72,10 @@ def test_upload_extensao_invalida_recusada():
 
 def test_upload_filename_traversal_sanitizado():
     client = TestClient(app, base_url="https://testserver")
+    slug = create_upload_test_tenant()
     png = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=")
     response = client.post(
-        "/triton/denuncias",
+        f"/{slug}/denuncias",
         data={"report_type": "anonima", "category": "outros", "description": "Traversal upload"},
         files={"attachments": ("../evil.png", png, "image/png")},
         headers={"x-forwarded-for": f"10.202.0.{uuid.uuid4().int % 200 + 1}"},

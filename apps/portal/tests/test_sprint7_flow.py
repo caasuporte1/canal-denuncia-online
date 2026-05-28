@@ -23,11 +23,14 @@ def test_homepage_portal_exibe_acessos_principais():
     assert 'href="/acompanhar"' in response.text
     assert 'href="/auth/login"' in response.text
     assert 'class="nav-button" href="/auth/login"' in response.text
-    assert "administrativo" not in response.text.lower()
+    assert "Acesso administrativo" not in response.text
     assert "Área da empresa" in response.text
+    assert "Admin Triton" in response.text
+    assert "Acesso restrito à administração da plataforma." in response.text
     assert "Como funciona" in response.text
     after_how_it_works = response.text.split("Como funciona", 1)[1].split("<footer", 1)[0]
-    assert 'href="/auth/login"' not in after_how_it_works
+    assert '<p class="muted" style="margin-top: 18px;"><a href="/auth/login">' not in after_how_it_works
+    assert 'class="button button-outline" href="/auth/login">Entrar como Admin Triton' in after_how_it_works
     assert "Guarde protocolo, login e senha" in response.text
     assert "Canal seguro para registro e acompanhamento de relatos internos" in response.text
     assert "Operado via plataforma online segura." in response.text
